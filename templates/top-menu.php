@@ -3,6 +3,8 @@
         <a href="index.php">Home</a>
         |
         <?php if (isLoggedIn()): ?>
+            <a href="list-users.php">All users</a>
+            |
             <a href="edit-post.php">New post</a>
             |
             <a href="list-posts.php">All posts</a>

@@ -18,15 +18,31 @@ if (isLoggedIn())
 $username = '';
 if ($_POST)
 {
-    $pdo = getPDO();
-    // We redirect only if the password is correct
-    $username = $_POST['username'];
-    $ok = tryLogin($pdo, $username, $_POST['password']);
-    if ($ok)
+    switch ($_GET['action'])
     {
-        login($username);
-        redirectAndExit('index.php');
+        case 'login':
+            $username = $_POST['username'];
+            $password = $_POST['password'];
+            $ok = tryLogin(getPDO(), $username, $password);
+            if ($ok)
+            {
+                login($username);
+                redirectAndExit('index.php');
+            }
+            break;
+        case 'signup':
+            $username = $_POST['username'];
+            $password = $_POST['password'];
+            $ok = trySignup(getPDO(), $username, $password);
+            if ($ok)
+            {
+                login($username);
+                redirectAndExit('index.php');
+            }
+            break;
     }
+
+    
 }
 ?>
 
@@ -49,23 +65,67 @@ if ($_POST)
         <p>Login here:</p>
         <form
             method="post"
-            action="login.php"
+            action="login.php?action=login"
+            class="user-form"
         >
-            <p>
-                Username:
+            <div>
+            <label for="username">
+                    Username:
+                </label>
+
                 <input
                     type="text"
+                    id="username"
                     name="username"
                     value="<?php echo htmlEscape($username) ?>"
                 />
-            </p>
-            <p>
-                Password:
-                <input type="password" name="password" />
-            </p>
+            </div>
+            <div>
+                <label for="password">
+                    Password:
+                </label>
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                />
+            </div>
             <p>
                 <input type="submit" value="Login" />
             </p>
         </form>
+        <p>Sign up here:</p>
+        <form
+            method="post"
+            action="login.php?action=signup"
+            class="user-form"
+        >
+            <div>
+            <label for="username">
+                    Username:
+                </label>
+
+                <input
+                    type="text"
+                    id="username"
+                    name="username"
+                    value="<?php echo htmlEscape($username) ?>"
+                />
+            </div>
+            <div>
+                <label for="password">
+                    Password:
+                </label>
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                />
+            </div>
+            <p>
+                <input type="submit" value="Sign up" />
+            </p>
+        </form>
+
     </body>
 </html>

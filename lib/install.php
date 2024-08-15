@@ -72,7 +72,7 @@ function installBlog(PDO $pdo)
  * @param integer $length
  * @return array Duple of (password, error)
  */
-function createUser(PDO $pdo, $username, $length = 10)
+function createAdminUser(PDO $pdo, $username, $length = 10)
 {
     // This algorithm creates a random password
     $alphabet = range(ord('A'), ord('z'));

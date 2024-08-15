@@ -126,6 +126,7 @@ function tryLogin(PDO $pdo, $username, $password)
             user
         WHERE
             username = :username
+            AND is_enabled = 1
     ";
     $stmt = $pdo->prepare($sql);
     $stmt->execute(
@@ -187,6 +188,7 @@ function getAuthUserId(PDO $pdo)
             user
         WHERE
             username = :username
+            AND is_enabled = 1
     ";
     $stmt = $pdo->prepare($sql);
     $stmt->execute(
@@ -220,3 +222,98 @@ function getAllPosts(PDO $pdo)
     }
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
+
+/**
+ * Gets a single post by ID
+ *
+ * @param PDO $pdo
+ * @param integer $postId
+ * @return bool
+ */
+function trySignup(PDO $pdo, $username, $password)
+{
+    // Verifica si el usuario ya existe
+    $sql = "
+        SELECT COUNT(*) 
+        FROM user 
+        WHERE username = :username
+    ";
+    $stmt = $pdo->prepare($sql);
+    if ($stmt === false)
+    {
+        throw new Exception('There was a problem preparing this query');
+    }
+    $stmt->execute(['username' => $username]);
+    $count = $stmt->fetchColumn();
+
+    // Si el usuario ya existe, retorna false
+    if ($count > 0) {
+        return false; 
+    }
+
+    // Inserta el nuevo usuario
+    $sql = "
+        INSERT INTO user
+        (username, password, created_at, is_enabled)
+        VALUES
+        (:username, :password, :created_at, :is_enabled)
+    ";
+    $stmt = $pdo->prepare($sql);
+    if ($stmt === false)
+    {
+        throw new Exception('There was a problem preparing this query');
+    }
+    
+    // Agrega más depuración y manejo de errores
+    try {
+        $success = $stmt->execute(
+            array(
+                'username' => $username,
+                'password' => password_hash($password, PASSWORD_DEFAULT),
+                'created_at' => date('Y-m-d H:i:s'),  // Formato de fecha y hora actual
+                'is_enabled' => true  // Valor por defecto
+            )
+        );
+        return $success;
+    } catch (PDOException $e) {
+        // Muestra el error para depuración
+        echo "Error executing query: " . $e->getMessage();
+        return false;
+    }
+}
+
+function deleteUser(PDO $pdo, $userId)
+{
+    $sql = "
+        DELETE FROM
+            user
+        WHERE
+            id = :id
+    ";
+    $stmt = $pdo->prepare($sql);
+    if ($stmt === false)
+    {
+        throw new Exception('There was a problem preparing this query');
+    }
+    $result = $stmt->execute(array('id' => $userId));
+    return $result !== false;
+}
+
+function getAllUsers(PDO $pdo)
+{
+    $stmt = $pdo->query(
+        'SELECT
+            id, username, created_at
+        FROM
+            user
+        ORDER BY
+            created_at DESC'
+    );
+    if ($stmt === false)
+    {
+        throw new Exception('There was a problem running this query');
+    }
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+
