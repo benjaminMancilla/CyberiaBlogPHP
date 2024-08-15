@@ -150,7 +150,11 @@ function login($username)
 {
     session_regenerate_id();
     $_SESSION['logged_in_username'] = $username;
+    
+    // Usar la función auxiliar para obtener el rol
+    $_SESSION['role'] = getUserRole($username);
 }
+
 
 function isLoggedIn()
 {
@@ -232,7 +236,6 @@ function getAllPosts(PDO $pdo)
  */
 function trySignup(PDO $pdo, $username, $password)
 {
-    // Verifica si el usuario ya existe
     $sql = "
         SELECT COUNT(*) 
         FROM user 
@@ -246,12 +249,10 @@ function trySignup(PDO $pdo, $username, $password)
     $stmt->execute(['username' => $username]);
     $count = $stmt->fetchColumn();
 
-    // Si el usuario ya existe, retorna false
     if ($count > 0) {
         return false; 
     }
 
-    // Inserta el nuevo usuario
     $sql = "
         INSERT INTO user
         (username, password, created_at, is_enabled)
@@ -264,7 +265,6 @@ function trySignup(PDO $pdo, $username, $password)
         throw new Exception('There was a problem preparing this query');
     }
     
-    // Agrega más depuración y manejo de errores
     try {
         $success = $stmt->execute(
             array(
@@ -303,7 +303,7 @@ function getAllUsers(PDO $pdo)
 {
     $stmt = $pdo->query(
         'SELECT
-            id, username, created_at
+            id, username, created_at, role
         FROM
             user
         ORDER BY
@@ -314,6 +314,54 @@ function getAllUsers(PDO $pdo)
         throw new Exception('There was a problem running this query');
     }
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+function getUserRole($username)
+{
+    $pdo = getPDO();
+    $sql = "SELECT role FROM user WHERE username = :username";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute(['username' => $username]);
+    $role = $stmt->fetchColumn();
+
+    return $role ?: 'user'; // Devuelve el rol, o 'user' por defecto si no se encuentra
+}
+
+function getAuthUserRole()
+{
+    return $_SESSION['role'] ?? 'user'; // Devuelve el rol almacenado en la sesión o 'user' por defecto
+}
+
+function isAdmin()
+{
+    return getAuthUserRole() === 'admin';
+}
+
+function isOwner($postId)
+{
+    $pdo = getPDO();
+    $userId = getAuthUserId($pdo);
+    if ($userId === null)
+    {
+        return false;
+    }
+    $sql = "
+        SELECT
+            COUNT(*)
+        FROM
+            post
+        WHERE
+            id = :post_id
+            AND user_id = :user_id
+    ";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute(
+        array(
+            'post_id' => $postId,
+            'user_id' => $userId
+        )
+    );
+    return $stmt->fetchColumn() > 0;
 }
 
 

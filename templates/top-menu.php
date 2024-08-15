@@ -1,13 +1,16 @@
+<?php require_once 'lib/common.php'; ?>
 <div class="top-menu">
     <div class="menu-options">
         <a href="index.php">Home</a>
         |
         <?php if (isLoggedIn()): ?>
-            <a href="list-users.php">All users</a>
-            |
+            <?php if (getAuthUserRole() === 'admin'): ?>  <!-- Verifica si el usuario es admin -->
+                <a href="list-users.php">All users</a>
+                |
+                <a href="list-posts.php">All posts</a>
+                |
+            <?php endif; ?>
             <a href="edit-post.php">New post</a>
-            |
-            <a href="list-posts.php">All posts</a>
             |
             Hello <?php echo htmlEscape(getAuthUser()) ?>.
             <a href="logout.php">Log out</a>

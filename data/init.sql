@@ -8,7 +8,8 @@ CREATE TABLE user (
     username VARCHAR NOT NULL,
     password VARCHAR NOT NULL,
     created_at VARCHAR NOT NULL,
-    is_enabled BOOLEAN NOT NULL DEFAULT true
+    is_enabled BOOLEAN NOT NULL DEFAULT true,
+    role VARCHAR NOT NULL DEFAULT 'user' 
 );
 
 /* This will become user = 1. I'm creating this just to satisfy constraints here.
@@ -16,11 +17,11 @@ CREATE TABLE user (
 INSERT INTO
     user
     (
-        username, password, created_at, is_enabled
+        username, password, created_at, is_enabled, role
     )
     VALUES
     (
-        "admin", "unhashed-password", datetime('now', '-3 months'), 1
+        "admin", "unhashed-password", datetime('now', '-3 months'), 1, 'admin'
     )
 ;
 

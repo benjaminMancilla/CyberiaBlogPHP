@@ -4,11 +4,6 @@ require_once 'lib/edit-post.php';
 require_once 'lib/view-post.php';
 session_start();
 
-// Don't let non-auth users see this screen
-if (!isLoggedIn())
-{
-    redirectAndExit('index.php');
-}
 
 // Empty defaults
 $title = $body = '';
@@ -26,6 +21,23 @@ if (isset($_GET['post_id']))
         $body = $post['body'];
     }
 }
+
+if ($postId)
+{
+    if (!isLoggedIn() || !(isAdmin() || isOwner($postId)))
+    {
+        redirectAndExit('index.php');
+    }
+}
+else
+{
+    #Create post
+    if (!isLoggedIn())
+    {
+        redirectAndExit('index.php');
+    }
+}
+
 
 // Handle the post operation here
 $errors = array();

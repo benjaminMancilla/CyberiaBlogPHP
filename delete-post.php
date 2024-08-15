@@ -6,10 +6,10 @@ require_once 'lib/list-posts.php';
 
 session_start();
 
-if (!isLoggedIn())
-{
+if (!isLoggedIn() || !isAdmin()) {
     redirectAndExit('index.php');
 }
+
 
 $postID = null;
 if (isset($_GET['post_id']))

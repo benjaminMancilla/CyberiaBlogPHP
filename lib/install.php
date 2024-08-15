@@ -92,7 +92,7 @@ function createAdminUser(PDO $pdo, $username, $length = 10)
         UPDATE
             user
         SET
-            password = :password, created_at = :created_at, is_enabled = 1
+            password = :password, created_at = :created_at, is_enabled = 1, role = 'admin'
         WHERE
             username = :username
     ";
