@@ -1,0 +1,192 @@
+/* Success/error message boxes */
+.box {
+    border: 1px dotted silver;
+    border-radius: 5px;
+    padding: 4px;
+}
+
+a {
+    text-decoration: none;
+    color: #007BFF;
+}
+
+.error {
+    background-color: #ff6666;
+}
+.success {
+    background-color: #88ff88;
+}
+.install-password {
+    font-size: 1.2em;
+}
+.top-menu {
+    border: 1px dotted silver;
+    min-height: 18px;
+    padding: 4px;
+    margin-bottom: 4px;
+}
+.menu-options {
+    float: right;
+}
+h1, h2, h3 {
+    margin-top: 0;
+    margin-bottom: 8px;
+}
+body {
+    font-family: sans-serif;
+}
+
+.post-synopsis, .post {
+    padding-bottom: 8px;
+    border-bottom: 1px dotted silver;
+    margin-bottom: 20px;
+}
+.post-synopsis h2, .post h2 {
+    color: darkblue;
+}
+.post .date, .post-synopsis .meta {
+    color: white;
+    background-color: grey;
+    border-radius: 7px;
+    padding: 2px;
+    display: inline;
+    font-size: 0.95em;
+}
+.comment .comment-meta {
+    font-size: 0.85em;
+    color: grey;
+    border-top: 1px dotted silver;
+    padding-top: 8px;
+}
+
+.comment .comment-meta input {
+    float: right;
+}
+
+.comment-body p {
+    margin: 8px 4px;
+}
+.comment-list {
+    border-bottom: 1px dotted silver;
+    margin-bottom: 12px;
+}
+
+.box ul {
+    margin: 4px;
+    padding-left: 14px;
+}
+.box ul li {
+    margin-bottom: 2px;
+}
+
+.comment-margin {
+    margin-bottom: 8px;
+}
+.user-form input,
+.user-form textarea {
+    margin: 4px;
+}
+.user-form label {
+    font-size: 0.95em;
+    margin: 6px;
+    width: 7em;
+    color: grey;
+    float: left;
+    text-align: right;
+    /* Some browsers make labels too tall, and as a result they incorrectly stack horizontally.
+        Let's reset each to the left-hand side to be sure. */
+    clear: left;
+}
+
+/* Additional styles */
+.read-more a {
+    text-decoration: none;
+    color: #007BFF;
+    font-size: 0.9em;
+}
+
+.post-list, .post {
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.comment-list h3 {
+    font-size: 1.2em;
+    margin-bottom: 10px;
+    max-width: 900px;
+}   
+
+#post-list {
+    border-collapse: collapse;
+    border: 1px solid silver;
+}
+
+#post-list td, #post-list th {
+    padding: 8px;
+    text-align: left;
+}
+
+#post-list tbody tr:nth-child(odd) {
+    background-color: #f4f4f4;
+}
+.form-title {
+    font-size: 1.5em;
+    margin-bottom: 0.5em;
+    color: #333;
+}
+
+/* General form styling */
+.comment-form {
+    max-width: 600px;
+    padding: 1em;
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+/* Individual form groups */
+.form-group {
+    margin-bottom: 1em;
+}
+
+/* Styling for form labels */
+.form-label {
+    display: block;
+    margin-bottom: 0.5em;
+    font-weight: bold;
+}
+
+/* Styling for text inputs */
+.form-input {
+    width: 30%;
+    padding: 0.3em;
+    font-size: 1em;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
+
+/* Styling for the textarea */
+.form-textarea {
+    width: 40%;
+    padding: 0.5em;
+    font-size: 1em;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
+
+/* Styling for the submit button */
+.form-submit-button {
+    padding: 0.3em 0.7em;
+    font-size: 1em;
+    background-color: rgb(37, 37, 225);
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.form-submit-button:hover {
+    background-color: rgb(72, 21, 131);
+}
+
+

@@ -1,0 +1,99 @@
+
+
+/* Foreign key constraints need to be explicitly enabled in SQLite */
+PRAGMA foreign_keys = ON;
+DROP TABLE IF EXISTS user;
+CREATE TABLE user (
+    id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    username VARCHAR NOT NULL,
+    password VARCHAR NOT NULL,
+    created_at VARCHAR NOT NULL,
+    is_enabled BOOLEAN NOT NULL DEFAULT true
+);
+
+/* This will become user = 1. I'm creating this just to satisfy constraints here.
+   The password will be properly hashed in the installer */
+INSERT INTO
+    user
+    (
+        username, password, created_at, is_enabled
+    )
+    VALUES
+    (
+        "admin", "unhashed-password", datetime('now', '-3 months'), 0
+    )
+;
+
+
+DROP TABLE IF EXISTS post;
+
+CREATE TABLE post (
+    id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    title VARCHAR NOT NULL,
+    body VARCHAR NOT NULL,
+    user_id INTEGER NOT NULL,
+    created_at VARCHAR NOT NULL,
+    updated_at VARCHAR,
+    FOREIGN KEY (user_id) REFERENCES user(id)
+);
+
+INSERT INTO post (
+    title, body, user_id, created_at
+) VALUES (
+    "Test post",
+    "Plain text",
+    1,
+    datetime('now', '-2 months', '-45 minutes', '+10 seconds')
+);
+
+INSERT INTO post (
+    title, body, user_id, created_at
+) VALUES (
+    "Now for a second article",
+    "This is the body of the second post.\nThis is another paragraph.",
+    1,
+     datetime('now', '-40 days', '+815 minutes', '+37 seconds')
+);
+
+INSERT INTO post (
+    title, body, user_id, created_at
+) VALUES (
+    "Here's a third post",
+    "This is the body of the third post.\nThis is split into paragraphs.",
+    1,
+    datetime('now', '-13 days', '+198 minutes', '+51 seconds')
+);
+
+DROP TABLE IF EXISTS comment;
+
+CREATE TABLE comment (
+    id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    body VARCHAR NOT NULL,
+    post_id INTEGER NOT NULL,
+    user_name VARCHAR NOT NULL,
+    created_at VARCHAR NOT NULL,
+    website VARCHAR,
+    FOREIGN KEY (post_id) REFERENCES post(id)
+);
+
+INSERT INTO comment (
+    body, post_id, user_name, created_at, website
+) VALUES (
+    "This is a comment on the first post.",
+    1,
+    "Alice",
+    datetime('now', '-10 days', '+231 minutes', '+7 seconds'),
+    "http://example.com"
+);
+
+INSERT INTO comment (
+    body, post_id, user_name, created_at, website
+) VALUES (
+    "This is a comment on the second post.",
+    2,
+    "Bob",
+    datetime('now', '-8 days', '+549 minutes', '+32 seconds'),
+    "http://example.com"
+);
+
+
