@@ -19,15 +19,35 @@ a {
 .install-password {
     font-size: 1.2em;
 }
+
 .top-menu {
-    border: 1px dotted silver;
-    min-height: 18px;
-    padding: 4px;
-    margin-bottom: 4px;
+    border: 2px solid silver;
+    min-height: 30px; 
+    padding: 10px; 
+    margin-bottom: 8px; 
+    background-color: #f4f4f4;
+    display: flex;
+    justify-content: flex-end; 
+    align-items: center; 
 }
+
 .menu-options {
-    float: right;
+    display: flex;
+    align-items: center;
 }
+
+.menu-options img {
+    margin-left: 10px;
+    margin-right: 5px;
+    vertical-align: middle;
+}
+
+.menu-options a {
+    margin-right: 3px;
+    margin-left: 3px;
+}
+
+
 h1, h2, h3 {
     margin-top: 0;
     margin-bottom: 8px;
@@ -188,5 +208,38 @@ body {
 .form-submit-button:hover {
     background-color: rgb(72, 21, 131);
 }
+
+.profile {
+    background-color: rgb(167, 231, 254);
+}
+.profile img {
+    background-color: "black";
+}
+
+/* Tamaño grande para la página de perfil */
+.profile-image-large {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+/* Tamaño mediano, por ejemplo, para la barra superior */
+.profile-image-medium {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+/* Tamaño pequeño, por ejemplo, para comentarios o vistas pequeñas */
+.profile-image-small {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+
 
 

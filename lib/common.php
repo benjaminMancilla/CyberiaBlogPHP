@@ -407,6 +407,16 @@ function createProfile(PDO $pdo, $userId, $username)
     return true;
 }
 
+function getAuthProfile(PDO $pdo)
+{
+    $userId = getAuthUserId($pdo);
+    if ($userId === null)
+    {
+        return null;
+    }
+    return getProfileById($pdo, $userId);
+}
+
 function getProfileById(PDO $pdo, $userID)
 {
     $sql = "SELECT * FROM profile WHERE user_id = :user_id";
@@ -415,30 +425,165 @@ function getProfileById(PDO $pdo, $userID)
     return $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
-function updateProfile(PDO $pdo, $userID, $visibleName, $aboutMe, $website, $avatar)
+function updateProfile(PDO $pdo, $userID, $visibleName, $aboutMe, $website, $avatar, $deleteAvatar)
 {
+    $updateAvatar = true;
+    if ($deleteAvatar) {
+        $imageData = null;
+    } elseif ($avatar['tmp_name']) {
+        $imageData = resizeAndCropImage($avatar['tmp_name'], 200, 200);
+    } else {
+        $updateAvatar = false;  
+    }
+
     $sql = "
         UPDATE profile
         SET
             visibleName = :visibleName,
             aboutMe = :aboutMe,
-            website = :website,
-            avatar = :avatar
-        WHERE
-            user_id = :user_id
+            website = :website
     ";
+
+    if ($updateAvatar) {
+        $sql .= ", avatar = :avatar";
+    }
+
+    $sql .= " WHERE user_id = :user_id";
+
     $stmt = $pdo->prepare($sql);
-    $stmt->execute([
+    if ($stmt === false) {
+        throw new Exception('There was a problem preparing this query');
+    }
+
+    // Preparamos los parámetros
+    $params = [
         'visibleName' => $visibleName,
         'aboutMe' => $aboutMe,
         'website' => $website,
-        'avatar' => $avatar,
         'user_id' => $userID
-    ]);
+    ];
+
+    if ($updateAvatar) {
+        $params['avatar'] = $imageData;
+    }
+
+    $stmt->execute($params);
 
     return $stmt->rowCount() > 0;
-
 }
+
+
+function resizeAndCropImage($sourcePath, $targetWidth, $targetHeight)
+{
+    list($width, $height, $imageType) = getimagesize($sourcePath);
+
+    switch ($imageType) {
+        case IMAGETYPE_JPEG:
+            $image = imagecreatefromjpeg($sourcePath);
+            break;
+        case IMAGETYPE_PNG:
+            $image = imagecreatefrompng($sourcePath);
+            break;
+        case IMAGETYPE_GIF:
+            $image = imagecreatefromgif($sourcePath);
+            break;
+        default:
+            throw new Exception('Unsupported image type.');
+    }
+
+    $originalAspect = $width / $height;
+    $thumbAspect = $targetWidth / $targetHeight;
+
+    if ($originalAspect >= $thumbAspect) {
+        $newHeight = $targetHeight;
+        $newWidth = $width / ($height / $targetHeight);
+    } else {
+        $newWidth = $targetWidth;
+        $newHeight = $height / ($width / $targetWidth);
+    }
+
+    $thumb = imagecreatetruecolor($targetWidth, $targetHeight);
+
+    // Si es PNG o GIF, mantener la transparencia
+    if ($imageType == IMAGETYPE_PNG || $imageType == IMAGETYPE_GIF) {
+        imagealphablending($thumb, false);
+        imagesavealpha($thumb, true);
+        $transparent = imagecolorallocatealpha($thumb, 255, 255, 255, 127); // Fondo blanco transparente
+        imagefilledrectangle($thumb, 0, 0, $targetWidth, $targetHeight, $transparent);
+        imagecolortransparent($thumb, $transparent);
+    }
+
+    imagecopyresampled($thumb, $image,
+        0 - ($newWidth - $targetWidth) / 2,
+        0 - ($newHeight - $targetHeight) / 2,
+        0, 0,
+        $newWidth, $newHeight,
+        $width, $height);
+
+    ob_start();
+    switch ($imageType) {
+        case IMAGETYPE_JPEG:
+            imagejpeg($thumb, null, 80);
+            break;
+        case IMAGETYPE_PNG:
+            imagepng($thumb);
+            break;
+        case IMAGETYPE_GIF:
+            imagegif($thumb);
+            break;
+    }
+    $imageData = ob_get_clean();
+    imagedestroy($thumb);
+
+    return $imageData;
+}
+
+function renderProfileImage($avatarData, $size, $altText = "Profile Image")
+{
+    // Define rutas y configuraciones
+    $defaultAvatar = '/blog/assets/images/default-avatar.png'; // Ruta relativa desde la raíz del servidor
+    $imageSrc = $defaultAvatar;
+    $className = 'profile-image-' . $size;
+
+    // Si hay datos de avatar, se genera la imagen
+    if ($avatarData) {
+        // Crear la URL de la imagen desde los datos binarios
+        $imageSrc = 'data:image/jpeg;base64,' . base64_encode($avatarData);
+    }
+
+    // Generar la etiqueta HTML de la imagen
+    return '<img src="' . htmlspecialchars($imageSrc) . '" class="' . htmlspecialchars($className) . '" alt="' . htmlspecialchars($altText) . '">';
+}
+
+function getUserID(PDO $pdo, $username)
+{
+    $sql = "
+        SELECT
+            id
+        FROM
+            user
+        WHERE
+            username = :username
+    ";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute(['username' => $username]);
+    
+    $userId = $stmt->fetchColumn();
+
+    if ($userId === false) {
+        throw new Exception('User not found: ' . $username);
+    }
+
+    return $userId;
+}
+
+
+
+
+
+
+
+
 
 
 

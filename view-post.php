@@ -56,6 +56,7 @@ else
     );
 }
 
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -74,7 +75,9 @@ else
                 <?php echo htmlEscape($row['title']) ?>
             </h2>
             <h3>
+                <a href="profile.php?profile_id=<?php echo $row['user_id']?>">
                 <?php echo htmlEscape($row['author']) ?>
+                </a>
             </h3>
             <div class="date">
                 <?php echo convertSqlDate($row['created_at']) ?>

@@ -9,17 +9,20 @@ require_once 'lib/edit-post.php';
 ?>
 
 <form
-    action="view-post.php?action=delete-comment&amp;post_id=<?php echo $postId?>&amp;"
+    action="view-post.php?action=delete-comment&amp;post_id=<?php echo $postId?>"
     method="post"
     class="comment-list"
 >
     <h3><?php echo $commentCount ?> comments</h3>
 
     <?php foreach (getCommentsForPost($pdo, $postId) as $comment): ?>
+        <?php $commentUserID = getUserID($pdo, $comment['user_name']); ?>
+        
         <div class="comment">
             <div class="comment-meta">
                 Comment from
-                <?php echo htmlEscape($comment['user_name']) ?>
+                <a href="profile.php?profile_id=<?php echo $commentUserID ?>">
+                    <?php echo htmlEscape($comment['user_name']) ?></a>
                 on
                 <?php echo convertSqlDate($comment['created_at']) ?>
                 <?php if (isLoggedIn()): ?>
@@ -36,6 +39,6 @@ require_once 'lib/edit-post.php';
             </div>
         </div>
     <?php endforeach ?>
-</div>
 </form>
+
 

@@ -27,15 +27,22 @@ if ($_POST) {
     $aboutMe = $_POST['aboutMe'];
     $website = $_POST['website'];
     $avatar = $_FILES['avatar'];
+    $deleteAvatar = false;
+    if ($_POST['clear-avatar']) {
+        $avatar = null;
+        $deleteAvatar = true;
+    }
 
-    $result = updateProfile($pdo, $profileID, $visibleName, $aboutMe, $website, $avatar);
+    $result = updateProfile($pdo, $profileID, $visibleName, $aboutMe, $website, $avatar, $deleteAvatar);
+    
     if ($result) {
-        echo "<p>Profile updated successfully.</p>";
         // Redirect to the profile view page of the updated profile
         header('Location: profile.php?profile_id=' . $profileID);
         exit;
     } else {
         echo "<p>There was an error updating the profile.</p>";
+        echo "<p>$result</p>";
+        echo "<p>Please try again.</p>";
     }
 }
 ?>
@@ -62,6 +69,7 @@ if ($_POST) {
         <br>
         <label for="avatar">Avatar:</label>
         <input type="file" id="avatar" name="avatar">
+        <input type="submit" name="clear-avatar" value="Clear Avatar">
         <br>
         <button type="submit">Update Profile</button>
     </form>

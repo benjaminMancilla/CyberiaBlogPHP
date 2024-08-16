@@ -1,4 +1,7 @@
-<?php require_once 'lib/common.php'; ?>
+<?php 
+require_once 'lib/common.php';
+$pdo = getPDO();
+$profile = getAuthProfile($pdo); ?>
 <div class="top-menu">
     <div class="menu-options">
         <a href="index.php">Home</a>
@@ -15,6 +18,9 @@
             <a href="edit-post.php">New post</a>
             |
             Hello <?php echo htmlEscape(getAuthUser()) ?>.
+            <a href="profile.php">
+                <?php echo renderProfileImage($profile['avatar'], 'small'); ?>
+            </a>
             <a href="logout.php">Log out</a>
         <?php else: ?>
             <a href="login.php">Log in</a>

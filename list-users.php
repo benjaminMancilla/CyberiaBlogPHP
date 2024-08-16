@@ -61,9 +61,10 @@ $users = getAllUsers($pdo);
                 <tbody>
                     <?php foreach ($users as $user): ?>
                         <tr>
-                            <td><?php echo htmlEscape($user['username']) ?></td>
+                            <td><a href="profile.php?profile_id=<?php echo $user['id']?>"><?php echo htmlEscape($user['username']) ?></td>
                             <td><?php echo htmlEscape($user['role']) ?></td>
                             <td><?php echo convertSqlDate($user['created_at']) ?></td>
+
                             <td>
                                 <button type="submit" name="delete-user[<?php echo $user['id'] ?>]">Delete</button>
                             </td>
