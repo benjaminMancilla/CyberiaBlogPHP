@@ -111,7 +111,6 @@ function addCommentToPost(PDO $pdo, $postId, array $commentData)
  */
 function handleAddComment(PDO $pdo, $postId, array $commentData)
 {
-    echo "handleAddComment";
     $errors = addCommentToPost(
         $pdo,
         $postId,

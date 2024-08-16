@@ -16,13 +16,21 @@ require_once 'lib/edit-post.php';
     <h3><?php echo $commentCount ?> comments</h3>
 
     <?php foreach (getCommentsForPost($pdo, $postId) as $comment): ?>
-        <?php $commentUserID = getUserID($pdo, $comment['user_name']); ?>
+        <?php $commentUserID = 0;
+        if ($comment['user_name']!= "anonymous") {
+            $commentUserID = getUserID($pdo, $comment['user_name']);
+        }
+        ?>
         
         <div class="comment">
             <div class="comment-meta">
                 Comment from
-                <a href="profile.php?profile_id=<?php echo $commentUserID ?>">
-                    <?php echo htmlEscape($comment['user_name']) ?></a>
+                <?php if ($commentUserID == 0): ?>
+                    <?php echo htmlEscape($comment['user_name']) ?>
+                <?php else: ?>
+                    <a href="profile.php?profile_id=<?php echo $commentUserID ?>">
+                        <?php echo htmlEscape($comment['user_name']) ?></a>
+                <?php endif ?>
                 on
                 <?php echo convertSqlDate($comment['created_at']) ?>
                 <?php if (isLoggedIn()): ?>

@@ -557,6 +557,7 @@ function renderProfileImage($avatarData, $size, $altText = "Profile Image")
 
 function getUserID(PDO $pdo, $username)
 {
+    
     $sql = "
         SELECT
             id
