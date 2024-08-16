@@ -43,6 +43,7 @@ if ($_POST)
         case 'delete-comment':
             $deleteResponse = $_POST['delete-comment'];
             handleDeleteComment($pdo, $postId, $deleteResponse);
+            echo "delete-comment";
             break;
     }
 }
@@ -72,6 +73,9 @@ else
             <h2>
                 <?php echo htmlEscape($row['title']) ?>
             </h2>
+            <h3>
+                <?php echo htmlEscape($row['author']) ?>
+            </h3>
             <div class="date">
                 <?php echo convertSqlDate($row['created_at']) ?>
             </div>

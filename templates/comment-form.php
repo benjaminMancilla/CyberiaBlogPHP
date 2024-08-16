@@ -15,7 +15,6 @@
     method="post"
     class="comment-form user-form"
 >
-
     <div class="form-group">
         <label for="comment-name" class="form-label">
             Name:
@@ -25,20 +24,8 @@
             id="comment-name"
             name="comment-name"
             class="form-input"
-            value="<?php echo htmlEscape($commentData['user_name']) ?>"
-        />
-    </div>
-
-    <div class="form-group">
-        <label for="comment-website" class="form-label">
-            Website:
-        </label>
-        <input
-            type="text"
-            id="comment-website"
-            name="comment-website"
-            class="form-input"
-            value="<?php echo htmlEscape($commentData['website']) ?>"
+            value="<?php echo isLoggedIn() ? htmlEscape(getAuthUser()) : 'anonymous' ?>"
+            readonly
         />
     </div>
 
@@ -59,3 +46,4 @@
         <input type="submit" value="Submit comment" class="form-submit-button" name="add-comment" />
     </div>
 </form>
+

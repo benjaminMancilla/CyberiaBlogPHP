@@ -11,19 +11,24 @@ function getPostRow(PDO $pdo, $postId)
 {
     $stmt = $pdo->prepare(
         'SELECT
-            title, created_at, body,
-            (SELECT COUNT(*) FROM comment WHERE comment.post_id = post.id) comment_count
+            p.title, 
+            p.created_at, 
+            p.body,
+            u.username AS author,
+            (SELECT COUNT(*) FROM comment WHERE comment.post_id = p.id) comment_count
         FROM
-            post
+            post p
+        JOIN
+            user u ON p.user_id = u.id
         WHERE
-            id = :id'
+            p.id = :id'
     );
     if ($stmt === false)
     {
         throw new Exception('There was a problem preparing this query');
     }
     $result = $stmt->execute(
-        array('id' => $postId, )
+        array('id' => $postId)
     );
     if ($result === false)
     {
@@ -35,6 +40,7 @@ function getPostRow(PDO $pdo, $postId)
 
     return $row;
 }
+
 
 /**
  * Writes a comment to a particular post
@@ -174,12 +180,50 @@ function handleDeleteComment(PDO $pdo, $postId, array $deleteResponse)
     {
         $keys = array_keys($deleteResponse);
         $deleteCommentId = $keys[0];
+
         if ($deleteCommentId)
         {
-            deleteComment($pdo, $postId, $deleteCommentId);
+            // Obtener información del comentario
+            $commentInfo = getCommentById($pdo, $deleteCommentId);
+            if (!$commentInfo) {
+                // Si no se encuentra el comentario, redirigir
+                redirectAndExit('view-post.php?post_id=' . $postId);
+            }
+
+            // Obtener rol del usuario
+            $currentUser = getAuthUser();
+            $currentUserRole = getUserRole($currentUser);
+
+            // Verificar si el usuario puede borrar el comentario
+            $isAuthor = $currentUser === $commentInfo['user_name'];
+            $isPostOwner = $currentUser === $commentInfo['post_owner'];
+            $isAdmin = $currentUserRole === 'admin';
+
+            if ($isAuthor || $isPostOwner || $isAdmin)
+            {
+                deleteComment($pdo, $postId, $deleteCommentId);
+            }
         }
-        redirectAndExit('view-post.php?post_id=' . $postId);
     }
+    redirectAndExit('view-post.php?post_id=' . $postId);
+}
+
+
+function getCommentById(PDO $pdo, $commentId)
+{
+    $sql = "
+        SELECT 
+            c.user_name, 
+            u.username as post_owner 
+        FROM comment c
+        JOIN post p ON c.post_id = p.id
+        JOIN user u ON p.user_id = u.id
+        WHERE c.id = :commentId
+    ";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute(['commentId' => $commentId]);
+
+    return $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
 

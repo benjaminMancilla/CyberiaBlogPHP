@@ -4,7 +4,7 @@ require_once 'lib/edit-post.php';
 session_start();
 
 // Don't let non-auth users see this screen
-if (!isLoggedIn())
+if (!isLoggedIn() || !isAdmin())
 {
     redirectAndExit('index.php');
 }

@@ -6,9 +6,6 @@ require_once 'lib/list-posts.php';
 
 session_start();
 
-if (!isLoggedIn() || !isAdmin()) {
-    redirectAndExit('index.php');
-}
 
 
 $postID = null;
@@ -27,6 +24,11 @@ if (isset($_GET['post_id']))
     }
 }
 else 
+{
+    redirectAndExit('index.php');
+}
+
+if (!isLoggedIn() || !(isAdmin() || isOwner($postID)))
 {
     redirectAndExit('index.php');
 }
