@@ -1,6 +1,3 @@
-
-
-/* Foreign key constraints need to be explicitly enabled in SQLite */
 PRAGMA foreign_keys = ON;
 DROP TABLE IF EXISTS user;
 CREATE TABLE user (
@@ -9,7 +6,7 @@ CREATE TABLE user (
     password VARCHAR NOT NULL,
     created_at VARCHAR NOT NULL,
     is_enabled BOOLEAN NOT NULL DEFAULT true,
-    role VARCHAR NOT NULL DEFAULT 'user' 
+    role VARCHAR NOT NULL DEFAULT 'user'
 );
 
 /* This will become user = 1. I'm creating this just to satisfy constraints here.
@@ -27,7 +24,6 @@ INSERT INTO
 
 
 DROP TABLE IF EXISTS post;
-
 CREATE TABLE post (
     id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
     title VARCHAR NOT NULL,
@@ -38,35 +34,7 @@ CREATE TABLE post (
     FOREIGN KEY (user_id) REFERENCES user(id)
 );
 
-INSERT INTO post (
-    title, body, user_id, created_at
-) VALUES (
-    "Test post",
-    "Plain text",
-    1,
-    datetime('now', '-2 months', '-45 minutes', '+10 seconds')
-);
-
-INSERT INTO post (
-    title, body, user_id, created_at
-) VALUES (
-    "Now for a second article",
-    "This is the body of the second post.\nThis is another paragraph.",
-    1,
-     datetime('now', '-40 days', '+815 minutes', '+37 seconds')
-);
-
-INSERT INTO post (
-    title, body, user_id, created_at
-) VALUES (
-    "Here's a third post",
-    "This is the body of the third post.\nThis is split into paragraphs.",
-    1,
-    datetime('now', '-13 days', '+198 minutes', '+51 seconds')
-);
-
 DROP TABLE IF EXISTS comment;
-
 CREATE TABLE comment (
     id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
     body VARCHAR NOT NULL,
@@ -77,24 +45,28 @@ CREATE TABLE comment (
     FOREIGN KEY (post_id) REFERENCES post(id)
 );
 
-INSERT INTO comment (
-    body, post_id, user_name, created_at, website
-) VALUES (
-    "This is a comment on the first post.",
-    1,
-    "Alice",
-    datetime('now', '-10 days', '+231 minutes', '+7 seconds'),
-    "http://example.com"
+DROP TABLE IF EXISTS profile;
+CREATE TABLE profile (
+    user_id INTEGER PRIMARY KEY,
+    username VARCHAR NOT NULL,
+    visibleName VARCHAR UNIQUE NOT NULL,
+    aboutMe TEXT,
+    website TEXT,
+    equippedBadge INTEGER DEFAULT 0,
+    badges TEXT, -- JSON string for array of integers
+    avatar BLOB, -- For storing the image
+    FOREIGN KEY (user_id) REFERENCES user(id)
 );
 
-INSERT INTO comment (
-    body, post_id, user_name, created_at, website
-) VALUES (
-    "This is a comment on the second post.",
-    2,
-    "Bob",
-    datetime('now', '-8 days', '+549 minutes', '+32 seconds'),
-    "http://example.com"
-);
+INSERT INTO
+    profile
+    (
+        user_id, username, visibleName, aboutMe, website, equippedBadge, badges, avatar
+    )
+    VALUES
+    (
+        1, "admin", "Admin", "I'm the admin of this site", "https://example.com", 0, "[]", NULL
+    )
+
 
 

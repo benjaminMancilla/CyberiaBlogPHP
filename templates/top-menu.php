@@ -4,6 +4,8 @@
         <a href="index.php">Home</a>
         |
         <?php if (isLoggedIn()): ?>
+            <a href="profile.php">Profile</a>
+            |
             <?php if (getAuthUserRole() === 'admin'): ?>  <!-- Verifica si el usuario es admin -->
                 <a href="list-users.php">All users</a>
                 |
@@ -19,3 +21,4 @@
         <?php endif ?>
     </div>
 </div>
+

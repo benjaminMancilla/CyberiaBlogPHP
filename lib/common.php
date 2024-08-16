@@ -266,21 +266,34 @@ function trySignup(PDO $pdo, $username, $password)
     }
     
     try {
-        $success = $stmt->execute(
-            array(
-                'username' => $username,
-                'password' => password_hash($password, PASSWORD_DEFAULT),
-                'created_at' => date('Y-m-d H:i:s'),  // Formato de fecha y hora actual
-                'is_enabled' => true  // Valor por defecto
-            )
-        );
-        return $success;
+        $pdo->beginTransaction();
+        
+        $stmt->execute([
+            'username' => $username,
+            'password' => password_hash($password, PASSWORD_DEFAULT),
+            'created_at' => date('Y-m-d H:i:s'),
+            'is_enabled' => true
+        ]);
+        
+        // Obtener el ID del usuario recién insertado
+        $userId = $pdo->lastInsertId();
+        
+        // Crear el perfil del usuario
+        if (!createProfile($pdo, $userId, $username)) {
+            $pdo->rollBack();
+            return false;
+        }
+
+        $pdo->commit();
+        return true;
     } catch (PDOException $e) {
+        $pdo->rollBack();
         // Muestra el error para depuración
-        echo "Error executing query: " . $e->getMessage();
+        echo "Error during sign-up: " . $e->getMessage();
         return false;
     }
 }
+
 
 function deleteUser(PDO $pdo, $userId)
 {
@@ -363,5 +376,85 @@ function isOwner($postId)
     );
     return $stmt->fetchColumn() > 0;
 }
+
+function createProfile(PDO $pdo, $userId, $username)
+{
+    $sql = "
+        INSERT INTO profile
+        (user_id, username, visibleName)
+        VALUES
+        (:user_id, :username, :visibleName)
+    ";
+    
+    $stmt = $pdo->prepare($sql);
+    if ($stmt === false)
+    {
+        throw new Exception('There was a problem preparing this query');
+    }
+    
+    try {
+        $stmt->execute([
+            'user_id' => $userId,
+            'username' => $username,
+            'visibleName' => $username // Por defecto, el nombre visible es el mismo que el username
+        ]);
+    } catch (PDOException $e) {
+        // Mostrar el error para depuración
+        echo "Error creating profile: " . $e->getMessage();
+        return false;
+    }
+    
+    return true;
+}
+
+function getProfileById(PDO $pdo, $userID)
+{
+    $sql = "SELECT * FROM profile WHERE user_id = :user_id";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute(['user_id' => $userID]);
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+}
+
+function updateProfile(PDO $pdo, $userID, $visibleName, $aboutMe, $website, $avatar)
+{
+    $sql = "
+        UPDATE profile
+        SET
+            visibleName = :visibleName,
+            aboutMe = :aboutMe,
+            website = :website,
+            avatar = :avatar
+        WHERE
+            user_id = :user_id
+    ";
+    $stmt = $pdo->prepare($sql);
+    $result = $stmt->execute([
+        'visibleName' => $visibleName,
+        'aboutMe' => $aboutMe,
+        'website' => $website,
+        'avatar' => $avatar,
+        'user_id' => $userID
+    ]);
+    return $result !== false;
+}
+{
+    $sql = "
+        UPDATE profile
+        SET
+            visibleName = :visibleName,
+            bio = :bio
+        WHERE
+            user_id = :user_id
+    ";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([
+        'visibleName' => $visibleName,
+        'bio' => $bio,
+        'user_id' => $userID
+    ]);
+}
+
+
+
 
 

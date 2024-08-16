@@ -5,6 +5,8 @@ require_once 'lib/install.php';
 // We store stuff in the session, to survive the redirect to self
 session_start();
 
+echo '<pre>';
+
 // Only run the installer when we're responding to the form
 if ($_POST)
 {
