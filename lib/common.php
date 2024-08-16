@@ -428,30 +428,16 @@ function updateProfile(PDO $pdo, $userID, $visibleName, $aboutMe, $website, $ava
             user_id = :user_id
     ";
     $stmt = $pdo->prepare($sql);
-    $result = $stmt->execute([
+    $stmt->execute([
         'visibleName' => $visibleName,
         'aboutMe' => $aboutMe,
         'website' => $website,
         'avatar' => $avatar,
         'user_id' => $userID
     ]);
-    return $result !== false;
-}
-{
-    $sql = "
-        UPDATE profile
-        SET
-            visibleName = :visibleName,
-            bio = :bio
-        WHERE
-            user_id = :user_id
-    ";
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute([
-        'visibleName' => $visibleName,
-        'bio' => $bio,
-        'user_id' => $userID
-    ]);
+
+    return $stmt->rowCount() > 0;
+
 }
 
 
