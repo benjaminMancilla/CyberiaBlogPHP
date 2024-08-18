@@ -226,5 +226,34 @@ function getCommentById(PDO $pdo, $commentId)
     return $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
+function handleEditComment($pdo, $commentId, $editText)
+{
+    $sql = "
+        UPDATE
+            comment
+        SET
+            body = :body
+        WHERE
+            id = :comment_id
+    ";
+    $stmt = $pdo->prepare($sql);
+    if ($stmt === false)
+    {
+        throw new Exception('Could not prepare comment update query');
+    }
+    $result = $stmt->execute(
+        array(
+            'body' => $editText,
+            'comment_id' => $commentId,
+        )
+    );
+    if ($result === false)
+    {
+        throw new Exception('Could not run comment update query');
+    }
+    return true;
+}
+
+
 
 

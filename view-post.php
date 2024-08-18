@@ -43,7 +43,14 @@ if ($_POST)
         case 'delete-comment':
             $deleteResponse = $_POST['delete-comment'];
             handleDeleteComment($pdo, $postId, $deleteResponse);
-            echo "delete-comment";
+            break;
+
+        case 'edit-comment':
+            // Obtener el ID del comentario del array de la solicitud POST
+            $editResponse = $_POST['edit-comment'];
+            foreach ($editResponse as $commentId => $editText) {
+                handleEditComment($pdo, $commentId, $editText);
+            }
             break;
     }
 }

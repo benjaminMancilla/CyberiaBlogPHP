@@ -33,7 +33,8 @@ require_once 'lib/edit-post.php';
                 <?php endif ?>
                 on
                 <?php echo convertSqlDate($comment['created_at']) ?>
-                <?php if (isLoggedIn()): ?>
+                <?php if (isLoggedIn() && ($comment['user_name'] == getAuthUser() ||
+            getAuthUser() == 'admin')): ?>
                     <input
                         type="submit"
                         name="delete-comment[<?php echo $comment['id'] ?>]"
@@ -45,6 +46,24 @@ require_once 'lib/edit-post.php';
                 <?php // This is already escaped ?>
                 <?php echo convertNewlinesToParagraphs($comment['body']) ?>
             </div>
+            <?php if ($comment['user_name'] == getAuthUser() ||
+            getAuthUser() == 'admin'): ?>
+                <div class="comment-controls">
+                    <?php // Botón de editar que despliega el bloque de texto ?>
+                    <input
+                        type="submit"
+                        formaction="view-post.php?action=edit-comment&amp;post_id=<?php echo $postId ?>"
+                        name="edit-comment[<?php echo $comment['id'] ?>]"
+                        value="Guardar"
+                    />
+                    <input
+                        type="text"
+                        name="edit-comment[<?php echo $comment['id'] ?>]"
+                        value="<?php echo htmlEscape($comment['body']) ?>"
+                    />
+                </div>
+
+            <?php endif ?>
         </div>
     <?php endforeach ?>
 </form>
