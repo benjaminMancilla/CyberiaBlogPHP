@@ -22,12 +22,24 @@ INSERT INTO
     )
 ;
 
+INSERT INTO
+    user
+    (
+        username, password, created_at, is_enabled, role
+    )
+    VALUES
+    (
+        "anonymous", "robot-eres-formidable", datetime('now', '-3 months'), 1, 'anonymous'
+    )
+;
+
 
 DROP TABLE IF EXISTS post;
 CREATE TABLE post (
     id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
     title VARCHAR NOT NULL,
     body VARCHAR NOT NULL,
+    image BLOB,
     user_id INTEGER NOT NULL,
     created_at VARCHAR NOT NULL,
     updated_at VARCHAR,

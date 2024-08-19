@@ -57,10 +57,17 @@ if ($_POST)
 
         <?php // If we have a username, then the user got something wrong, so let's have an error ?>
         <?php if ($username): ?>
-            <div class="error box">
-                The username or password is incorrect, try again
-            </div>
+            <?php if ($username === 'anonymous'): ?>
+                <div class="error box">
+                    :)
+                </div>
+                <?php else: ?>
+                <div class="error box">
+                    The username or password is incorrect, try again
+                </div>
+                <?php endif ?>
         <?php endif ?>
+        
 
         <p>Login here:</p>
         <form

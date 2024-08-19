@@ -135,6 +135,10 @@ function tryLogin(PDO $pdo, $username, $password)
     // Get the hash from this row, and use the third-party hashing library to check it
     $hash = $stmt->fetchColumn();
     $success = password_verify($password, $hash);
+    if ($username === 'anonymous')
+    {
+        $success = false;
+    }
     return $success;
 }
 /**
@@ -557,7 +561,7 @@ function renderProfileImage($avatarData, $size, $altText = "Profile Image")
 
 function getUserID(PDO $pdo, $username)
 {
-    
+
     $sql = "
         SELECT
             id
