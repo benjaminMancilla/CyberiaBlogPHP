@@ -40,6 +40,7 @@ CREATE TABLE post (
     title VARCHAR NOT NULL,
     body VARCHAR NOT NULL,
     image BLOB,
+    thumbnail BLOB,
     user_id INTEGER NOT NULL,
     created_at VARCHAR NOT NULL,
     updated_at VARCHAR,

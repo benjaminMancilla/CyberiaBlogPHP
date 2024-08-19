@@ -216,7 +216,6 @@ body {
     background-color: "black";
 }
 
-/* Tamaño grande para la página de perfil */
 .profile-image-large {
     width: 150px;
     height: 150px;
@@ -224,7 +223,7 @@ body {
     object-fit: cover;
 }
 
-/* Tamaño mediano, por ejemplo, para la barra superior */
+
 .profile-image-medium {
     width: 50px;
     height: 50px;
@@ -232,13 +231,34 @@ body {
     object-fit: cover;
 }
 
-/* Tamaño pequeño, por ejemplo, para comentarios o vistas pequeñas */
+
 .profile-image-small {
     width: 30px;
     height: 30px;
     border-radius: 50%;
     object-fit: cover;
 }
+
+.post-thumbnail {
+    
+    justify-content: flex-end; 
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 60%;
+    
+}
+
+.post-thumbnail-container {
+    text-align: left;
+    margin-bottom: 10px;
+    width: 30%;
+}
+
+.post-image-full {
+    width: 100%;
+    height: auto;
+}
+
 
 
 

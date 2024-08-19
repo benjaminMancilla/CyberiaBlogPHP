@@ -54,13 +54,38 @@ if ($_POST)
     {
         $errors[] = 'The post must have a body';
     }
+    
+    // Handle image upload if a file was submitted
+    if (isset($_FILES['post-image']) && $_FILES['post-image']['error'] === UPLOAD_ERR_OK)
+    {
+        
+        $imageSource = $_FILES['post-image']['tmp_name'];
+        $imageData = file_get_contents($_FILES['post-image']['tmp_name']);
+        $imageError = saveImage($imageData);
+        if ($imageError) {
+            $errors[] = $imageError;
+        }
+
+    }
+    else
+    {
+        $imageSource = null; // No image was uploaded
+    }
+
     if (!$errors)
     {
-
         // Decide if we are editing or adding
         if ($postId)
         {
-            $result = editPost($pdo, $title, $body, $postId);
+            if ($imageSource)
+            {
+                $result = editPost($pdo, $title, $body, $postId, $imageSource, true);
+            }
+            else
+            {
+                $result = editPost($pdo, $title, $body, $postId);
+            }
+
             if ($result === false)
             {
                 $errors[] = 'Post operation failed';
@@ -69,25 +94,21 @@ if ($_POST)
         else
         {
             $userId = getAuthUserId($pdo);
-            $postId = addPost(
-                $pdo,
-                $title,
-                $body,
-                $userId
-            );
+            $postId = addPost($pdo, $title, $body, $userId, $imageSource);
             if ($postId === false)
             {
                 $errors[] = 'Post operation failed';
             }
         }
     }
+    
     if (!$errors)
     {
-
         redirectAndExit('view-post.php?post_id=' . $postId);
         exit;
     }
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -114,33 +135,42 @@ if ($_POST)
             </div>
         <?php endif ?>
 
-        <form method="post" class="post-form user-form">
-            <div>
-                <label for="post-title">Title:</label>
-                <input
-                    id="post-title"
-                    name="post-title"
-                    type="text"
-                    value="<?php echo htmlEscape($title) ?>"
-                />
-            </div>
-            <div>
-                <label for="post-body">Body:</label>
-                <textarea
-                    id="post-body"
-                    name="post-body"
-                    rows="12"
-                    cols="70"
-                ><?php echo htmlEscape($body) ?></textarea>
-            </div>
-            <div>
-                <input
-                    type="submit"
-                    value="Save post"
-                />
-                <a href="index.php">Cancel</a>
-            </div>
-        </form>
+        <form method="post" class="post-form user-form" enctype="multipart/form-data">
+        <div>
+            <label for="post-title">Title:</label>
+            <input
+                id="post-title"
+                name="post-title"
+                type="text"
+                value="<?php echo htmlEscape($title) ?>"
+            />
+        </div>
+        <div>
+            <label for="post-body">Body:</label>
+            <textarea
+                id="post-body"
+                name="post-body"
+                rows="12"
+                cols="70"
+            ><?php echo htmlEscape($body) ?></textarea>
+        </div>
+        <div>
+            <label for="post-image">Image:</label>
+            <input
+                id="post-image"
+                name="post-image"
+                type="file"
+                accept="image/jpeg, image/png"
+            />
+        </div>
+        <div>
+            <input
+                type="submit"
+                value="Save post"
+            />
+            <a href="index.php">Cancel</a>
+        </div>
+    </form>
     </body>
 </html>
 

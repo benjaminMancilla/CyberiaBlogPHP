@@ -582,6 +582,138 @@ function getUserID(PDO $pdo, $username)
     return $userId;
 }
 
+function savePostImage(PDO $pdo, $postID, $imagePath, $minWidth = 200, $minHeight = 200, $maxWidth = 1920, $maxHeight = 1080)
+{
+    // Obtener información de la imagen
+    list($width, $height, $imageType) = getimagesize($imagePath);
+
+    // Verificar si la resolución cumple con los requisitos
+    if ($width < $minWidth || $height < $minHeight || $width > $maxWidth || $height > $maxHeight) {
+        throw new Exception('La imagen no cumple con los requisitos de resolución.');
+    }
+
+    // Crear la imagen en base al tipo
+    switch ($imageType) {
+        case IMAGETYPE_JPEG:
+            $image = imagecreatefromjpeg($imagePath);
+            break;
+        case IMAGETYPE_PNG:
+            $image = imagecreatefrompng($imagePath);
+            break;
+        default:
+            throw new Exception('Tipo de imagen no soportado.');
+    }
+
+    // Mantener la transparencia para PNG
+    if ($imageType == IMAGETYPE_PNG) {
+        imagealphablending($image, false);
+        imagesavealpha($image, true);
+    }
+
+    // Convertir la imagen a datos binarios
+    ob_start();
+    switch ($imageType) {
+        case IMAGETYPE_JPEG:
+            imagejpeg($image, null, 80);
+            break;
+        case IMAGETYPE_PNG:
+            imagepng($image);
+            break;
+    }
+    $imageData = ob_get_clean();
+
+    // Destruir el recurso de la imagen
+    imagedestroy($image);
+
+    // Guardar la imagen en la base de datos
+    $sql = "
+        UPDATE post
+        SET
+            image = :image
+        WHERE
+            id = :post_id
+    ";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([
+        'image' => $imageData,
+        'post_id' => $postID
+    ]);
+
+    return $stmt->rowCount() > 0;
+}
+
+function renderPostThumbnail($imageData, $altText = "Post Image Thumbnail")
+{
+    // Define a default image path for when no image is provided
+    $defaultImage = '/blog/assets/images/default-post-thumbnail.png';
+    $imageSrc = $defaultImage;
+    $className = 'post-thumbnail';
+
+    // If image data exists, encode it to display the image
+    if ($imageData) {
+        $imageSrc = 'data:image/jpeg;base64,' . base64_encode($imageData);
+    }
+
+    // Return the HTML for the image
+    return '<img src="' . htmlspecialchars($imageSrc) . '" class="' . htmlspecialchars($className) . '" alt="' . htmlspecialchars($altText) . '">';
+}
+
+
+
+function renderPostImageFull($imageData, $altText = "Full Resolution Post Image")
+{
+    // Define a default image path for when no image is provided
+    $defaultImage = '/blog/assets/images/default-post-image.png';
+    $imageSrc = $defaultImage;
+    $className = 'post-image-full';
+
+    // If image data exists, encode it to display the image
+    if ($imageData) {
+        $imageSrc = 'data:image/jpeg;base64,' . base64_encode($imageData);
+    }
+
+    // Return the HTML for the image
+    return '<img src="' . htmlspecialchars($imageSrc) . '" class="' . htmlspecialchars($className) . '" alt="' . htmlspecialchars($altText) . '">';
+}
+
+function saveImage($imageData)
+{
+    
+    // Define minimum and maximum resolution
+    $minWidth = 20;
+    $minHeight = 20;
+    $maxWidth = 2000;
+    $maxHeight = 2000;
+
+    // Create an image resource from the binary data
+    $image = imagecreatefromstring($imageData);
+    if (!$image) {
+        return 'Invalid image format. Please upload a JPEG or PNG image.';
+    }
+
+    // Get the dimensions of the image
+    $width = imagesx($image);
+    $height = imagesy($image);
+
+    // Check if the image meets the resolution requirements
+    if ($width < $minWidth || $height < $minHeight) {
+        return "Image is too small. Minimum resolution is {$minWidth}x{$minHeight} pixels.";
+    }
+    if ($width > $maxWidth || $height > $maxHeight) {
+        return "Image is too large. Maximum resolution is {$maxWidth}x{$maxHeight} pixels.";
+    }
+
+    // The image meets the requirements, so return the binary data
+    return false;
+}
+
+
+
+
+
+
+
+
 
 
 

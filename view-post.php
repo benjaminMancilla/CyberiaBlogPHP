@@ -89,6 +89,13 @@ else
             <div class="date">
                 <?php echo convertSqlDate($row['created_at']) ?>
             </div>
+            <?php if ($row['thumbnail']): ?>
+
+                <div class="post-thumbnail-container">
+                    <?php echo renderPostThumbnail($row['thumbnail'], "Thumbnail for " . htmlEscape($row['title'])); ?>
+                </div>
+
+            <?php endif ?>
 
             <?php // This is already escaped, so doesn't need further escaping ?>
             <?php echo convertNewlinesToParagraphs($row['body']) ?>
