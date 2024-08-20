@@ -72,14 +72,20 @@ if ($_POST)
         $imageSource = null; // No image was uploaded
     }
 
+
     if (!$errors)
     {
         // Decide if we are editing or adding
         if ($postId)
         {
-            if ($imageSource)
+            if ($imageSource && !(isset($_POST['delete-image'])))
             {
                 $result = editPost($pdo, $title, $body, $postId, $imageSource, true);
+            }
+            else if (isset($_POST['delete-image']))
+            {
+                echo "delete";
+                $result = editPost($pdo, $title, $body, $postId, null, true);
             }
             else
             {
@@ -162,7 +168,17 @@ if ($_POST)
                 type="file"
                 accept="image/jpeg, image/png"
             />
+            <input
+                    type="checkbox"
+                    name="delete-image"
+                    id="delete-image"
+                    
+                />
+                Delete Image
+            
         </div>
+
+        
         <div>
             <input
                 type="submit"

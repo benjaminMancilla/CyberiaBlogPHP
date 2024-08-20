@@ -29,7 +29,24 @@ function addPost(PDO $pdo, $title, $body, $userId, $imageSource = null)
 
 function editPost(PDO $pdo, $title, $body, $postId, $imageSource = null, $updateImage = false)
 {
-
+    if ($updateImage && !$imageSource) {
+        deleteImage($pdo, $postId);
+        $sql = '
+            UPDATE
+                post
+            SET
+                title = :title,
+                body = :body
+            WHERE
+                id = :id';
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute(array(
+            ':title' => $title,
+            ':body' => $body,
+            ':id' => $postId,
+        ));
+        return $stmt->rowCount() === 1;
+    }
     if ($updateImage) {
         $imageData = file_get_contents($imageSource);
         $thumbnailData = makeThumbnail($imageData);
@@ -156,5 +173,21 @@ function makeThumbnail($imageSource, $maxSize = 600) {
     imagedestroy($thumbnail);
 
     return $thumbnailData;
+}
+
+function deleteImage(PDO $pdo, $postId)
+{
+
+    $sql = "
+        UPDATE
+            post
+        SET
+            image = NULL,
+            thumbnail = NULL
+        WHERE
+            id = :id
+    ";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute(array(':id' => $postId));
 }
 
