@@ -55,6 +55,7 @@ CREATE TABLE comment (
     user_name VARCHAR NOT NULL,
     created_at VARCHAR NOT NULL,
     website VARCHAR,
+    image BLOB,
     FOREIGN KEY (post_id) REFERENCES post(id)
 );
 

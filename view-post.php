@@ -46,11 +46,20 @@ if ($_POST)
             break;
 
         case 'edit-comment':
-            // Obtener el ID del comentario del array de la solicitud POST
-            $editResponse = $_POST['edit-comment'];
-            foreach ($editResponse as $commentId => $editText) {
-                handleEditComment($pdo, $commentId, $editText);
+            $commentId = array_key_first($_POST['edit-comment']);
+            echo $commentId;
+            $commentText = $_POST['edit-comment-text'][$commentId];
+            echo $commentText;
+            $commentImageSource = null;
+            // Access file input data correctly
+            if (isset($_FILES['edit-comment-image'])) {
+                $commentImage = $_FILES['edit-comment-image'];
+                $commentImageSource = $commentImage['tmp_name'][$commentId];
+                echo $commentImageSource;
             }
+        
+            handleEditComment($pdo, $commentId, $commentText, $commentImageSource);
+        
             break;
     }
 }

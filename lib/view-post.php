@@ -51,9 +51,10 @@ function getPostRow(PDO $pdo, $postId)
  * @param PDO $pdo
  * @param integer $postId
  * @param array $commentData
+ * @param string $imageData
  * @return array
  */
-function addCommentToPost(PDO $pdo, $postId, array $commentData)
+function addCommentToPost(PDO $pdo, $postId, array $commentData, $imageData = null)
 {
     $errors = array();
 
@@ -73,8 +74,8 @@ function addCommentToPost(PDO $pdo, $postId, array $commentData)
         $sql = "
             INSERT INTO
                 comment
-            (user_name, website, body, created_at, post_id)
-            VALUES(:user_name, :website, :body, :created_at, :post_id)
+            (user_name, website, body, created_at, post_id, image)
+            VALUES(:user_name, :website, :body, :created_at, :post_id, :image)
         ";
         $stmt = $pdo->prepare($sql);
         if ($stmt === false)
@@ -85,7 +86,11 @@ function addCommentToPost(PDO $pdo, $postId, array $commentData)
         $result = $stmt->execute(
             array_merge(
                 $commentData,
-                array('post_id' => $postId, 'created_at' => getSqlDateForNow(), )
+                array(
+                    'post_id' => $postId,
+                    'created_at' => getSqlDateForNow(),
+                    'image' => $imageData
+                )
             )
         );
 
@@ -101,7 +106,7 @@ function addCommentToPost(PDO $pdo, $postId, array $commentData)
     }
 
     return $errors;
-} 
+}
 
 
 /**
@@ -228,13 +233,18 @@ function getCommentById(PDO $pdo, $commentId)
     return $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
-function handleEditComment($pdo, $commentId, $editText)
+function handleEditComment(PDO $pdo, $commentId, $editText, $imageSource = null)
 {
+    if ($imageSource)
+    {
+        $imageData = file_get_contents($imageSource);
+    }
     $sql = "
         UPDATE
             comment
         SET
-            body = :body
+            body = :body,
+            image = :image
         WHERE
             id = :comment_id
     ";
@@ -243,18 +253,23 @@ function handleEditComment($pdo, $commentId, $editText)
     {
         throw new Exception('Could not prepare comment update query');
     }
+
     $result = $stmt->execute(
         array(
             'body' => $editText,
+            'image' => $imageData,
             'comment_id' => $commentId,
         )
     );
+
     if ($result === false)
     {
         throw new Exception('Could not run comment update query');
     }
+
     return true;
 }
+
 
 
 

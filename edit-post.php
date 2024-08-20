@@ -84,7 +84,7 @@ if ($_POST)
             }
             else if (isset($_POST['delete-image']))
             {
-                echo "delete";
+                
                 $result = editPost($pdo, $title, $body, $postId, null, true);
             }
             else
