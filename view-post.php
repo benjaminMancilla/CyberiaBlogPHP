@@ -27,6 +27,7 @@ if (!$row)
 }
 
 $errors = null;
+//Mainly comments changes, post changes go to edit-post.php
 if ($_POST)
 {
     switch ($_GET['action'])
@@ -40,6 +41,7 @@ if ($_POST)
             );
             $errors = handleAddComment($pdo, $postId, $commentData);
             break;
+
         case 'delete-comment':
             $deleteResponse = $_POST['delete-comment'];
             handleDeleteComment($pdo, $postId, $deleteResponse);
@@ -47,20 +49,19 @@ if ($_POST)
 
         case 'edit-comment':
             $commentId = array_key_first($_POST['edit-comment']);
-            echo $commentId;
             $commentText = $_POST['edit-comment-text'][$commentId];
-            echo $commentText;
+        
+            //Image handling
             $commentImageSource = null;
-            // Access file input data correctly
-            if (isset($_FILES['edit-comment-image'])) {
-                $commentImage = $_FILES['edit-comment-image'];
-                $commentImageSource = $commentImage['tmp_name'][$commentId];
-                echo $commentImageSource;
+            $commentImageField = 'edit-comment-image-' . $commentId;
+        
+            if (isset($_FILES[$commentImageField]) && $_FILES[$commentImageField]['error'] === UPLOAD_ERR_OK) {
+                $commentImageSource = $_FILES[$commentImageField]['tmp_name'];
             }
         
             handleEditComment($pdo, $commentId, $commentText, $commentImageSource);
-        
             break;
+            
     }
 }
 else
@@ -106,7 +107,6 @@ else
 
             <?php endif ?>
 
-            <?php // This is already escaped, so doesn't need further escaping ?>
             <?php echo convertNewlinesToParagraphs($row['body']) ?>
         </div>
 

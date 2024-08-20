@@ -117,48 +117,6 @@ function getSqlDateForNow()
 }
 
 
-function tryLogin(PDO $pdo, $username, $password)
-{
-    $sql = "
-        SELECT
-            password
-        FROM
-            user
-        WHERE
-            username = :username
-            AND is_enabled = 1
-    ";
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute(
-        array('username' => $username, )
-    );
-    // Get the hash from this row, and use the third-party hashing library to check it
-    $hash = $stmt->fetchColumn();
-    $success = password_verify($password, $hash);
-    if ($username === 'anonymous')
-    {
-        $success = false;
-    }
-    return $success;
-}
-/**
- * Logs the user in
- *
- * For safety, we ask PHP to regenerate the cookie, so if a user logs onto a site that a cracker
- * has prepared for him/her (e.g. on a public computer) the cracker's copy of the cookie ID will be
- * useless.
- *
- * @param string $username
- */
-function login($username)
-{
-    session_regenerate_id();
-    $_SESSION['logged_in_username'] = $username;
-    
-    // Usar la función auxiliar para obtener el rol
-    $_SESSION['role'] = getUserRole($username);
-}
-
 
 function isLoggedIn()
 {
@@ -166,13 +124,6 @@ function isLoggedIn()
 }
 
 
-/**
- * Logs the user out
- */
-function logout()
-{
-    unset($_SESSION['logged_in_username']);
-}
 function getAuthUser()
 {
     return isLoggedIn() ? $_SESSION['logged_in_username'] : null;
@@ -229,73 +180,6 @@ function getAllPosts(PDO $pdo)
         throw new Exception('There was a problem running this query');
     }
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
-}
-
-/**
- * Gets a single post by ID
- *
- * @param PDO $pdo
- * @param integer $postId
- * @return bool
- */
-function trySignup(PDO $pdo, $username, $password)
-{
-    $sql = "
-        SELECT COUNT(*) 
-        FROM user 
-        WHERE username = :username
-    ";
-    $stmt = $pdo->prepare($sql);
-    if ($stmt === false)
-    {
-        throw new Exception('There was a problem preparing this query');
-    }
-    $stmt->execute(['username' => $username]);
-    $count = $stmt->fetchColumn();
-
-    if ($count > 0) {
-        return false; 
-    }
-
-    $sql = "
-        INSERT INTO user
-        (username, password, created_at, is_enabled)
-        VALUES
-        (:username, :password, :created_at, :is_enabled)
-    ";
-    $stmt = $pdo->prepare($sql);
-    if ($stmt === false)
-    {
-        throw new Exception('There was a problem preparing this query');
-    }
-    
-    try {
-        $pdo->beginTransaction();
-        
-        $stmt->execute([
-            'username' => $username,
-            'password' => password_hash($password, PASSWORD_DEFAULT),
-            'created_at' => date('Y-m-d H:i:s'),
-            'is_enabled' => true
-        ]);
-        
-        // Obtener el ID del usuario recién insertado
-        $userId = $pdo->lastInsertId();
-        
-        // Crear el perfil del usuario
-        if (!createProfile($pdo, $userId, $username)) {
-            $pdo->rollBack();
-            return false;
-        }
-
-        $pdo->commit();
-        return true;
-    } catch (PDOException $e) {
-        $pdo->rollBack();
-        // Muestra el error para depuración
-        echo "Error during sign-up: " . $e->getMessage();
-        return false;
-    }
 }
 
 
@@ -381,35 +265,6 @@ function isOwner($postId)
     return $stmt->fetchColumn() > 0;
 }
 
-function createProfile(PDO $pdo, $userId, $username)
-{
-    $sql = "
-        INSERT INTO profile
-        (user_id, username, visibleName)
-        VALUES
-        (:user_id, :username, :visibleName)
-    ";
-    
-    $stmt = $pdo->prepare($sql);
-    if ($stmt === false)
-    {
-        throw new Exception('There was a problem preparing this query');
-    }
-    
-    try {
-        $stmt->execute([
-            'user_id' => $userId,
-            'username' => $username,
-            'visibleName' => $username // Por defecto, el nombre visible es el mismo que el username
-        ]);
-    } catch (PDOException $e) {
-        // Mostrar el error para depuración
-        echo "Error creating profile: " . $e->getMessage();
-        return false;
-    }
-    
-    return true;
-}
 
 function getAuthProfile(PDO $pdo)
 {
@@ -429,119 +284,6 @@ function getProfileById(PDO $pdo, $userID)
     return $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
-function updateProfile(PDO $pdo, $userID, $visibleName, $aboutMe, $website, $avatar, $deleteAvatar)
-{
-    $updateAvatar = true;
-    if ($deleteAvatar) {
-        $imageData = null;
-    } elseif ($avatar['tmp_name']) {
-        $imageData = resizeAndCropImage($avatar['tmp_name'], 200, 200);
-    } else {
-        $updateAvatar = false;  
-    }
-
-    $sql = "
-        UPDATE profile
-        SET
-            visibleName = :visibleName,
-            aboutMe = :aboutMe,
-            website = :website
-    ";
-
-    if ($updateAvatar) {
-        $sql .= ", avatar = :avatar";
-    }
-
-    $sql .= " WHERE user_id = :user_id";
-
-    $stmt = $pdo->prepare($sql);
-    if ($stmt === false) {
-        throw new Exception('There was a problem preparing this query');
-    }
-
-    // Preparamos los parámetros
-    $params = [
-        'visibleName' => $visibleName,
-        'aboutMe' => $aboutMe,
-        'website' => $website,
-        'user_id' => $userID
-    ];
-
-    if ($updateAvatar) {
-        $params['avatar'] = $imageData;
-    }
-
-    $stmt->execute($params);
-
-    return $stmt->rowCount() > 0;
-}
-
-
-function resizeAndCropImage($sourcePath, $targetWidth, $targetHeight)
-{
-    list($width, $height, $imageType) = getimagesize($sourcePath);
-
-    switch ($imageType) {
-        case IMAGETYPE_JPEG:
-            $image = imagecreatefromjpeg($sourcePath);
-            break;
-        case IMAGETYPE_PNG:
-            $image = imagecreatefrompng($sourcePath);
-            break;
-        case IMAGETYPE_GIF:
-            $image = imagecreatefromgif($sourcePath);
-            break;
-        default:
-            throw new Exception('Unsupported image type.');
-    }
-
-    $originalAspect = $width / $height;
-    $thumbAspect = $targetWidth / $targetHeight;
-
-    if ($originalAspect >= $thumbAspect) {
-        $newHeight = $targetHeight;
-        $newWidth = $width / ($height / $targetHeight);
-    } else {
-        $newWidth = $targetWidth;
-        $newHeight = $height / ($width / $targetWidth);
-    }
-
-    $thumb = imagecreatetruecolor($targetWidth, $targetHeight);
-
-    // Si es PNG o GIF, mantener la transparencia
-    if ($imageType == IMAGETYPE_PNG || $imageType == IMAGETYPE_GIF) {
-        imagealphablending($thumb, false);
-        imagesavealpha($thumb, true);
-        $transparent = imagecolorallocatealpha($thumb, 255, 255, 255, 127); // Fondo blanco transparente
-        imagefilledrectangle($thumb, 0, 0, $targetWidth, $targetHeight, $transparent);
-        imagecolortransparent($thumb, $transparent);
-    }
-
-    imagecopyresampled($thumb, $image,
-        0 - ($newWidth - $targetWidth) / 2,
-        0 - ($newHeight - $targetHeight) / 2,
-        0, 0,
-        $newWidth, $newHeight,
-        $width, $height);
-
-    ob_start();
-    switch ($imageType) {
-        case IMAGETYPE_JPEG:
-            imagejpeg($thumb, null, 80);
-            break;
-        case IMAGETYPE_PNG:
-            imagepng($thumb);
-            break;
-        case IMAGETYPE_GIF:
-            imagegif($thumb);
-            break;
-    }
-    $imageData = ob_get_clean();
-    imagedestroy($thumb);
-
-    return $imageData;
-}
-
 function renderProfileImage($avatarData, $size, $altText = "Profile Image")
 {
     // Define rutas y configuraciones
@@ -556,6 +298,40 @@ function renderProfileImage($avatarData, $size, $altText = "Profile Image")
     }
 
     // Generar la etiqueta HTML de la imagen
+    return '<img src="' . htmlspecialchars($imageSrc) . '" class="' . htmlspecialchars($className) . '" alt="' . htmlspecialchars($altText) . '">';
+}
+
+
+function renderPostThumbnail($imageData, $altText = "Post Image Thumbnail")
+{
+    // Define a default image path for when no image is provided
+    $defaultImage = '/blog/assets/images/default-post-thumbnail.png';
+    $imageSrc = $defaultImage;
+    $className = 'post-thumbnail';
+
+    // If image data exists, encode it to display the image
+    if ($imageData) {
+        $imageSrc = 'data:image/jpeg;base64,' . base64_encode($imageData);
+    }
+
+    // Return the HTML for the image
+    return '<img src="' . htmlspecialchars($imageSrc) . '" class="' . htmlspecialchars($className) . '" alt="' . htmlspecialchars($altText) . '">';
+}
+
+
+function renderPostImageFull($imageData, $altText = "Full Resolution Post Image")
+{
+    // Define a default image path for when no image is provided
+    $defaultImage = '/blog/assets/images/default-post-image.png';
+    $imageSrc = $defaultImage;
+    $className = 'post-image-full';
+
+    // If image data exists, encode it to display the image
+    if ($imageData) {
+        $imageSrc = 'data:image/jpeg;base64,' . base64_encode($imageData);
+    }
+
+    // Return the HTML for the image
     return '<img src="' . htmlspecialchars($imageSrc) . '" class="' . htmlspecialchars($className) . '" alt="' . htmlspecialchars($altText) . '">';
 }
 
@@ -582,130 +358,105 @@ function getUserID(PDO $pdo, $username)
     return $userId;
 }
 
-function savePostImage(PDO $pdo, $postID, $imagePath, $minWidth = 200, $minHeight = 200, $maxWidth = 1920, $maxHeight = 1080)
-{
-    // Obtener información de la imagen
-    list($width, $height, $imageType) = getimagesize($imagePath);
 
-    // Verificar si la resolución cumple con los requisitos
-    if ($width < $minWidth || $height < $minHeight || $width > $maxWidth || $height > $maxHeight) {
-        throw new Exception('La imagen no cumple con los requisitos de resolución.');
-    }
+function resizeAndCropImage($sourcePath, $targetWidth, $targetHeight) {
+    $image = loadImage($sourcePath, $imageType);
 
-    // Crear la imagen en base al tipo
-    switch ($imageType) {
-        case IMAGETYPE_JPEG:
-            $image = imagecreatefromjpeg($imagePath);
-            break;
-        case IMAGETYPE_PNG:
-            $image = imagecreatefrompng($imagePath);
-            break;
-        default:
-            throw new Exception('Tipo de imagen no soportado.');
-    }
+    $thumb = resizeAndCropImageResource($image, $targetWidth, $targetHeight, $imageType);
 
-    // Mantener la transparencia para PNG
-    if ($imageType == IMAGETYPE_PNG) {
-        imagealphablending($image, false);
-        imagesavealpha($image, true);
-    }
-
-    // Convertir la imagen a datos binarios
     ob_start();
     switch ($imageType) {
         case IMAGETYPE_JPEG:
-            imagejpeg($image, null, 80);
+            imagejpeg($thumb, null, 80);
             break;
         case IMAGETYPE_PNG:
-            imagepng($image);
+            imagepng($thumb);
+            break;
+        case IMAGETYPE_GIF:
+            imagegif($thumb);
             break;
     }
     $imageData = ob_get_clean();
+    imagedestroy($thumb);
 
-    // Destruir el recurso de la imagen
-    imagedestroy($image);
-
-    // Guardar la imagen en la base de datos
-    $sql = "
-        UPDATE post
-        SET
-            image = :image
-        WHERE
-            id = :post_id
-    ";
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute([
-        'image' => $imageData,
-        'post_id' => $postID
-    ]);
-
-    return $stmt->rowCount() > 0;
-}
-
-function renderPostThumbnail($imageData, $altText = "Post Image Thumbnail")
-{
-    // Define a default image path for when no image is provided
-    $defaultImage = '/blog/assets/images/default-post-thumbnail.png';
-    $imageSrc = $defaultImage;
-    $className = 'post-thumbnail';
-
-    // If image data exists, encode it to display the image
-    if ($imageData) {
-        $imageSrc = 'data:image/jpeg;base64,' . base64_encode($imageData);
-    }
-
-    // Return the HTML for the image
-    return '<img src="' . htmlspecialchars($imageSrc) . '" class="' . htmlspecialchars($className) . '" alt="' . htmlspecialchars($altText) . '">';
+    return $imageData;
 }
 
 
-
-function renderPostImageFull($imageData, $altText = "Full Resolution Post Image")
-{
-    // Define a default image path for when no image is provided
-    $defaultImage = '/blog/assets/images/default-post-image.png';
-    $imageSrc = $defaultImage;
-    $className = 'post-image-full';
-
-    // If image data exists, encode it to display the image
-    if ($imageData) {
-        $imageSrc = 'data:image/jpeg;base64,' . base64_encode($imageData);
+function loadImage($source, &$imageType = null) {
+    if (is_string($source)) {
+        list($width, $height, $imageType) = getimagesize($source);
+        switch ($imageType) {
+            case IMAGETYPE_JPEG:
+                return imagecreatefromjpeg($source);
+            case IMAGETYPE_PNG:
+                return imagecreatefrompng($source);
+            case IMAGETYPE_GIF:
+                return imagecreatefromgif($source);
+            default:
+                throw new Exception('Unsupported image type.');
+        }
+    } else {
+        $image = imagecreatefromstring($source);
+        if (!$image) {
+            throw new Exception('No se pudo crear la imagen desde los datos binarios.');
+        }
+        return $image;
     }
-
-    // Return the HTML for the image
-    return '<img src="' . htmlspecialchars($imageSrc) . '" class="' . htmlspecialchars($className) . '" alt="' . htmlspecialchars($altText) . '">';
 }
 
-function saveImage($imageData)
-{
-    
-    // Define minimum and maximum resolution
-    $minWidth = 20;
-    $minHeight = 20;
-    $maxWidth = 2000;
-    $maxHeight = 2000;
-
-    // Create an image resource from the binary data
-    $image = imagecreatefromstring($imageData);
-    if (!$image) {
-        return 'Invalid image format. Please upload a JPEG or PNG image.';
-    }
-
-    // Get the dimensions of the image
+function checkImageResolution($image, $minWidth = 20, $minHeight = 20, $maxWidth = 2000, $maxHeight = 2000) {
     $width = imagesx($image);
     $height = imagesy($image);
 
-    // Check if the image meets the resolution requirements
     if ($width < $minWidth || $height < $minHeight) {
         return "Image is too small. Minimum resolution is {$minWidth}x{$minHeight} pixels.";
     }
+
     if ($width > $maxWidth || $height > $maxHeight) {
         return "Image is too large. Maximum resolution is {$maxWidth}x{$maxHeight} pixels.";
     }
 
-    // The image meets the requirements, so return the binary data
-    return false;
+    // Si la resolución es válida, retornar null o un valor que indique éxito.
+    return null;
 }
+
+
+function resizeAndCropImageResource($image, $targetWidth, $targetHeight, $imageType) {
+    $width = imagesx($image);
+    $height = imagesy($image);
+    $originalAspect = $width / $height;
+    $thumbAspect = $targetWidth / $targetHeight;
+
+    if ($originalAspect >= $thumbAspect) {
+        $newHeight = $targetHeight;
+        $newWidth = $width / ($height / $targetHeight);
+    } else {
+        $newWidth = $targetWidth;
+        $newHeight = $height / ($width / $targetWidth);
+    }
+
+    $thumb = imagecreatetruecolor($targetWidth, $targetHeight);
+
+    // Si la imagen es PNG o GIF, habilitar la transparencia
+    if ($imageType == IMAGETYPE_PNG || $imageType == IMAGETYPE_GIF) {
+        imagealphablending($thumb, false);
+        imagesavealpha($thumb, true);
+        $transparent = imagecolorallocatealpha($thumb, 255, 255, 255, 127); // Transparencia
+        imagefilledrectangle($thumb, 0, 0, $targetWidth, $targetHeight, $transparent);
+    }
+
+    imagecopyresampled($thumb, $image,
+        0 - ($newWidth - $targetWidth) / 2,
+        0 - ($newHeight - $targetHeight) / 2,
+        0, 0,
+        $newWidth, $newHeight,
+        $width, $height);
+
+    return $thumb;
+}
+
+
 
 
 

@@ -1,5 +1,6 @@
 <?php
 require_once 'lib/common.php';
+require_once 'lib/profile.php';
 
 session_start();
 if (!isLoggedIn()) {

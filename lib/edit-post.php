@@ -6,7 +6,7 @@ function addPost(PDO $pdo, $title, $body, $userId, $imageSource = null)
     $thumbnailData = null;
     if ($imageSource) {
         $imageData = file_get_contents($imageSource);
-        $thumbnailData = makeThumbnail($imageData);
+        $thumbnailData = makeThumbnail($imageSource);
     }
 
 
@@ -49,7 +49,7 @@ function editPost(PDO $pdo, $title, $body, $postId, $imageSource = null, $update
     }
     if ($updateImage) {
         $imageData = file_get_contents($imageSource);
-        $thumbnailData = makeThumbnail($imageData);
+        $thumbnailData = makeThumbnail($imageSource);
     }
 
     $sql = "
@@ -136,44 +136,27 @@ function deletePost(PDO $pdo, $postId)
 }
 
 function makeThumbnail($imageSource, $maxSize = 600) {
-    // Crear imagen a partir de los datos binarios
-    $image = imagecreatefromstring($imageSource);
-    if (!$image) {
-        throw new Exception('No se pudo crear la imagen desde los datos binarios.');
-    }
-
-    // Obtener dimensiones originales
+    $image = loadImage($imageSource, $imageType);
     $width = imagesx($image);
     $height = imagesy($image);
 
-    // Calcular la nueva dimensión manteniendo la relación de aspecto
-    if ($width > $height) {
-        $newWidth = $maxSize;
-        $newHeight = ($height / $width) * $maxSize;
-    } else {
-        $newHeight = $maxSize;
-        $newWidth = ($width / $height) * $maxSize;
-    }
-
-    // Crear la imagen de la miniatura
-    $thumbnail = imagecreatetruecolor($newWidth, $newHeight);
-    $bgColor = imagecolorallocate($thumbnail, 255, 255, 255); // Fondo blanco
-    imagefill($thumbnail, 0, 0, $bgColor);
-
-    // Redimensionar la imagen
-    imagecopyresampled($thumbnail, $image, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
-
-    // Guardar la miniatura en un blob
+    $thumbnail = resizeAndCropImageResource($image, $width > $height ? $maxSize : ($width / $height) * $maxSize, $width > $height ? ($height / $width) * $maxSize : $maxSize, $imageType);
+    
     ob_start();
-    imagejpeg($thumbnail);
+    if ($imageType == IMAGETYPE_PNG || $imageType == IMAGETYPE_GIF) {
+        imagepng($thumbnail);
+    } else {
+        imagejpeg($thumbnail);
+    }
     $thumbnailData = ob_get_clean();
 
-    // Liberar memoria
     imagedestroy($image);
     imagedestroy($thumbnail);
 
     return $thumbnailData;
 }
+
+
 
 function deleteImage(PDO $pdo, $postId)
 {

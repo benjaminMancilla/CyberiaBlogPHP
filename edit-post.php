@@ -60,10 +60,21 @@ if ($_POST)
     {
         
         $imageSource = $_FILES['post-image']['tmp_name'];
-        $imageData = file_get_contents($_FILES['post-image']['tmp_name']);
-        $imageError = saveImage($imageData);
-        if ($imageError) {
-            $errors[] = $imageError;
+        $imageData = file_get_contents($imageSource);
+
+        // Check if the image is valid
+        $image = imagecreatefromstring($imageData);
+
+        if (!$image) {
+            $errors[] = 'Invalid image format. Please upload a JPEG or PNG image.';
+        } else {
+            $imageError = checkImageResolution($image);
+            if ($imageError) {
+                $errors[] = $imageError;
+            }
+
+            // Free up the memory
+            imagedestroy($image);
         }
 
     }
@@ -78,15 +89,18 @@ if ($_POST)
         // Decide if we are editing or adding
         if ($postId)
         {
+            //Update image
             if ($imageSource && !(isset($_POST['delete-image'])))
             {
                 $result = editPost($pdo, $title, $body, $postId, $imageSource, true);
             }
+            //Delete image
             else if (isset($_POST['delete-image']))
             {
                 
                 $result = editPost($pdo, $title, $body, $postId, null, true);
             }
+            //No image change
             else
             {
                 $result = editPost($pdo, $title, $body, $postId);
