@@ -54,7 +54,7 @@ function getPostRow(PDO $pdo, $postId)
  * @param string $imageData
  * @return array
  */
-function addCommentToPost(PDO $pdo, $postId, array $commentData, $imageData = null)
+function addCommentToPost(PDO $pdo, $postId, array $commentData, $imageSource = null)
 {
     $errors = array();
 
@@ -81,6 +81,11 @@ function addCommentToPost(PDO $pdo, $postId, array $commentData, $imageData = nu
         if ($stmt === false)
         {
             throw new Exception('Cannot prepare statement to insert comment');
+        }
+        if ($imageSource) {
+            $imageData = makeThumbnail($imageSource, 300);
+        } else {
+            $imageData = null;
         }
 
         $result = $stmt->execute(
@@ -116,12 +121,13 @@ function addCommentToPost(PDO $pdo, $postId, array $commentData, $imageData = nu
  * @param integer $postId
  * @param array $commentData
  */
-function handleAddComment(PDO $pdo, $postId, array $commentData)
+function handleAddComment(PDO $pdo, $postId, array $commentData, $imageSource = null)
 {
     $errors = addCommentToPost(
         $pdo,
         $postId,
-        $commentData
+        $commentData,
+        $imageSource
     );
     // If there are no errors, redirect back to self and redisplay
     if (!$errors)
@@ -233,42 +239,50 @@ function getCommentById(PDO $pdo, $commentId)
     return $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
+//Refractor to this (add editComment function)
 function handleEditComment(PDO $pdo, $commentId, $editText, $imageSource = null)
 {
-    if ($imageSource)
-    {
-        $imageData = file_get_contents($imageSource);
-    }
+    // Start building the SQL query
     $sql = "
         UPDATE
             comment
         SET
-            body = :body,
-            image = :image
+            body = :body";
+    
+    if ($imageSource) {
+        $sql .= ",
+            image = :image"; // Add image field if imageSource is provided
+    }
+    
+    $sql .= "
         WHERE
-            id = :comment_id
-    ";
+            id = :comment_id";
+
     $stmt = $pdo->prepare($sql);
-    if ($stmt === false)
-    {
+    if ($stmt === false) {
         throw new Exception('Could not prepare comment update query');
     }
 
-    $result = $stmt->execute(
-        array(
-            'body' => $editText,
-            'image' => $imageData,
-            'comment_id' => $commentId,
-        )
+    // Prepare parameters for the query
+    $params = array(
+        ':body' => $editText,
+        ':comment_id' => $commentId,
     );
 
-    if ($result === false)
-    {
+    if ($imageSource) {
+        $imageData = makeThumbnail($imageSource, 300);
+        $params[':image'] = $imageData; // Bind image data if available
+    }
+
+    // Execute the query with bound parameters
+    $result = $stmt->execute($params);
+    if ($result === false) {
         throw new Exception('Could not run comment update query');
     }
 
     return true;
 }
+
 
 
 

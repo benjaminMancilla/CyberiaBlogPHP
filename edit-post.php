@@ -60,21 +60,10 @@ if ($_POST)
     {
         
         $imageSource = $_FILES['post-image']['tmp_name'];
-        $imageData = file_get_contents($imageSource);
-
-        // Check if the image is valid
-        $image = imagecreatefromstring($imageData);
-
-        if (!$image) {
-            $errors[] = 'Invalid image format. Please upload a JPEG or PNG image.';
-        } else {
-            $imageError = checkImageResolution($image);
-            if ($imageError) {
-                $errors[] = $imageError;
-            }
-
-            // Free up the memory
-            imagedestroy($image);
+        $errors = handleImageUpload($imageSource);
+        if (count($errors) > 0)
+        {
+            $imageSource = null;
         }
 
     }

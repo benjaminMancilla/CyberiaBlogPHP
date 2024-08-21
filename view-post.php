@@ -39,7 +39,19 @@ if ($_POST)
                 'website' => $_POST['comment-website'],
                 'body' => $_POST['comment-text'],
             );
-            $errors = handleAddComment($pdo, $postId, $commentData);
+            $commentImageSource = null;
+            //Check valid image
+            if (isset($_FILES['comment-image']) && $_FILES['comment-image']['error'] === UPLOAD_ERR_OK)
+            {
+                $commentImageSource = $_FILES['comment-image']['tmp_name'];
+                $errors = handleImageUpload($commentImageSource);
+                if ($errors)
+                {
+                    $commentImageSource = null;
+                }
+            }
+
+            $errors = handleAddComment($pdo, $postId, $commentData, $commentImageSource);
             break;
 
         case 'delete-comment':
@@ -55,6 +67,7 @@ if ($_POST)
             $commentImageSource = null;
             $commentImageField = 'edit-comment-image-' . $commentId;
         
+            //Check valid image
             if (isset($_FILES[$commentImageField]) && $_FILES[$commentImageField]['error'] === UPLOAD_ERR_OK) {
                 $commentImageSource = $_FILES[$commentImageField]['tmp_name'];
             }

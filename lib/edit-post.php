@@ -135,26 +135,6 @@ function deletePost(PDO $pdo, $postId)
     }
 }
 
-function makeThumbnail($imageSource, $maxSize = 600) {
-    $image = loadImage($imageSource, $imageType);
-    $width = imagesx($image);
-    $height = imagesy($image);
-
-    $thumbnail = resizeAndCropImageResource($image, $width > $height ? $maxSize : ($width / $height) * $maxSize, $width > $height ? ($height / $width) * $maxSize : $maxSize, $imageType);
-    
-    ob_start();
-    if ($imageType == IMAGETYPE_PNG || $imageType == IMAGETYPE_GIF) {
-        imagepng($thumbnail);
-    } else {
-        imagejpeg($thumbnail);
-    }
-    $thumbnailData = ob_get_clean();
-
-    imagedestroy($image);
-    imagedestroy($thumbnail);
-
-    return $thumbnailData;
-}
 
 
 

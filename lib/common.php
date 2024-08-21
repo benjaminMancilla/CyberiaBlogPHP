@@ -405,6 +405,21 @@ function loadImage($source, &$imageType = null) {
     }
 }
 
+function checkImageSize($imageSource, $maxSize = 1048576, $maxWidth = 2000, $maxHeight = 2000) {
+    $imageSize = getimagesize($imageSource);
+    $image_width = $imageSize[0];
+    $image_height = $imageSize[1];
+    $fileSize = filesize($imageSource);
+    if ($fileSize > $maxSize) {
+        return "Image is too large. Maximum size is " . $maxSize / 1024 . "KB.";
+    }
+    if ( $image_width > $maxWidth || $image_height > $maxHeight) {
+        return "Image is too large. Maximum resolution is {$maxWidth}x{$maxHeight} pixels.";
+    }
+    return null;
+    
+}
+
 function checkImageResolution($image, $minWidth = 20, $minHeight = 20, $maxWidth = 2000, $maxHeight = 2000) {
     $width = imagesx($image);
     $height = imagesy($image);
@@ -455,6 +470,48 @@ function resizeAndCropImageResource($image, $targetWidth, $targetHeight, $imageT
 
     return $thumb;
 }
+
+function handleImageUpload($imageSource, $maxSize = 1048576, $minWidth = 100, $minHeight = 100 ,$maxWidth = 2000, $maxHeight = 2000) {
+    
+        $errors = [];
+        $Image = loadImage($imageSource);
+        if ($Image === null)
+        {
+            $errors[] = 'Please upload a valid image file';
+        }
+        if (checkImageResolution($Image, $minWidth, $minHeight, $maxWidth, $maxHeight) === false)
+        {
+            $errors[] = 'Image must be at least 100x100 pixels';
+        }
+        if (checkImageSize($imageSource, $maxSize, $maxWidth, $maxHeight) !== null)
+        {
+            $errors[] = 'Image must be no more than 1MB';
+        }
+        return $errors;
+        
+    }
+
+function makeThumbnail($imageSource, $maxSize = 600) {
+    $image = loadImage($imageSource, $imageType);
+    $width = imagesx($image);
+    $height = imagesy($image);
+
+    $thumbnail = resizeAndCropImageResource($image, $width > $height ? $maxSize : ($width / $height) * $maxSize, $width > $height ? ($height / $width) * $maxSize : $maxSize, $imageType);
+    
+    ob_start();
+    if ($imageType == IMAGETYPE_PNG || $imageType == IMAGETYPE_GIF) {
+        imagepng($thumbnail);
+    } else {
+        imagejpeg($thumbnail);
+    }
+    $thumbnailData = ob_get_clean();
+
+    imagedestroy($image);
+    imagedestroy($thumbnail);
+
+    return $thumbnailData;
+}
+
 
 
 

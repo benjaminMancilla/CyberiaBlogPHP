@@ -14,6 +14,7 @@
     action="view-post.php?action=add-comment&amp;post_id=<?php echo $postId?>"
     method="post"
     class="comment-form user-form"
+    enctype="multipart/form-data"
 >
     <div class="form-group">
         <label for="comment-name" class="form-label">
@@ -41,6 +42,18 @@
             cols="70"
         ><?php echo htmlEscape($commentData['body']) ?></textarea>
     </div>
+    
+    <div class="form-group">
+        <label for="comment-image" class="form-label">
+            Image:
+        </label>
+        <input
+            type="file"
+            id="comment-image"
+            name="comment-image"
+            class="form-input"
+            accept="image/jpeg, image/png, image/gif"
+        />
 
     <div class="form-group">
         <input type="submit" value="Submit comment" class="form-submit-button" name="add-comment" />

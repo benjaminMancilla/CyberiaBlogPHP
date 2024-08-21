@@ -5,8 +5,8 @@ function updateProfile(PDO $pdo, $userID, $visibleName, $aboutMe, $website, $ava
     $updateAvatar = true;
     if ($deleteAvatar) {
         $imageData = null;
-    } elseif ($avatar['tmp_name']) {
-        $imageData = resizeAndCropImage($avatar['tmp_name'], 200, 200);
+    } elseif ($avatar) {
+        $imageData = resizeAndCropImage($avatar, 200, 200);
     } else {
         $updateAvatar = false;  
     }

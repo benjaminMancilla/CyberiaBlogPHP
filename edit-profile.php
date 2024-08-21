@@ -27,15 +27,26 @@ if ($_POST) {
     $visibleName = $_POST['visibleName'];
     $aboutMe = $_POST['aboutMe'];
     $website = $_POST['website'];
-    $avatar = $_FILES['avatar'];
+    $avatar = null;
     $deleteAvatar = false;
+
+    if (isset($_FILES['avatar']) && $_FILES['avatar']['error'] === UPLOAD_ERR_OK)
+        {
+            $avatarSource = $_FILES['avatar']['tmp_name'];
+            $errors = handleImageUpload($avatarSource);
+            if(!$errors)
+            {
+                $avatar = $_FILES['avatar']['tmp_name'];
+            }
+        }
+    
     if ($_POST['clear-avatar']) {
         $avatar = null;
         $deleteAvatar = true;
     }
 
     $result = updateProfile($pdo, $profileID, $visibleName, $aboutMe, $website, $avatar, $deleteAvatar);
-    
+
     if ($result) {
         // Redirect to the profile view page of the updated profile
         header('Location: profile.php?profile_id=' . $profileID);
