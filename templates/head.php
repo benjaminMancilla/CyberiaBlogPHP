@@ -3,4 +3,4 @@
 <link rel="stylesheet" type="text/css" href="assets/profile.css" />
 <link rel="stylesheet" type="text/css" href="assets/post.css" />
 <link rel="stylesheet" type="text/css" href="assets/main.css" />
-
+<link rel="stylesheet" type="text/css" href="assets/index.css" />

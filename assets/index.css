@@ -1,0 +1,118 @@
+.post-list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: calc(90% - 36%); /* Resta el ancho de las dos sidebars (200px cada una) */
+    margin: 0 auto;
+    padding: 20px;
+}
+
+#post-list td, #post-list th {
+    padding: 8px;
+    text-align: left;
+}
+
+#post-list tbody tr:nth-child(odd) {
+    background-color: #f4f4f4;
+}
+
+
+.post-synopsis {
+    width: 75%; 
+    margin-bottom: 12px;
+    background-color: #2b2b2b; 
+    border-radius: 16px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    text-align: left;
+}
+
+.post-synopsis h2, .post h2 {
+    color: #f2f2f2;
+    font-size: 18px;
+}
+.post .date, .post-synopsis .meta {
+    color: white;
+    background-color: grey;
+    border-radius: 7px;
+    padding: 2px;
+    display: inline;
+    font-size: 0.95em;
+}
+
+#left-sidebar {
+    position: fixed;
+    top: 60px; /* Asegúrate que sea el tamaño de tu top bar */
+    left: 0;
+    width: 120px;
+    height: calc(100% - 60px); /* Ajusta para que no ocupe la barra superior */
+    background-color: #1a1a1a;
+    padding: 20px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
+}
+
+#right-sidebar {
+    position: fixed;
+    top: 60px;
+    right: 0;
+    width: 120px;
+    height: calc(100% - 60px);
+    background-color: #1a1a1a;
+    padding: 20px;
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5);
+}
+
+
+.post-index-image-container {
+    width: 100%; 
+    margin: 16px 0 10px 0; 
+    padding: 0;
+    justify-content: center;
+}
+
+.post-index-image img {
+    width: 100%; 
+    height: auto; 
+    max-height: 480px; 
+    border-radius: 20px; 
+    object-fit: contain;
+}
+
+.post-creation-info {
+    display: flex; 
+    align-items: center; 
+    vertical-align: middle;
+    font-size: 0.9em;
+    color: #ff80ff;
+    font-weight: 300;
+}
+
+.post-author-avatar {
+    margin-right: 5px; 
+}
+
+.post-author-name {
+    font-weight: 500;
+    margin-right: 5px;
+}
+
+.post-body p {
+    text-align: left;
+    margin: 10px 0 10px 0;
+}
+
+.post-main-container {
+    padding: 6px 16px 6px 16px;
+}
+
+.post-controls {
+    margin-bottom: 4px;
+}
+
+.post-controls a {
+    text-align: center;
+    color: #ff80ff;
+}
+
+.post-controls a:hover {
+    color: #ffffff;
+}

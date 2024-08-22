@@ -1,8 +1,14 @@
-<?php 
-require_once 'lib/common.php';
-$pdo = getPDO();
-$profile = getAuthProfile($pdo); ?>
 <div class="top-menu">
+    <div class="left-menu">
+        <div class=menu-logo>
+            <a href="index.php" class="no-class">
+                <img src="assets/images/logo.png" alt="Background Image">
+            </a>
+        </div>
+        <div class="menu-gif">
+            <img src="assets/gifs/top-lain.gif" alt="GIF">
+        </div>
+    </div>
     <div class="menu-options">
         <a href="index.php">Home</a>
         |
@@ -25,5 +31,6 @@ $profile = getAuthProfile($pdo); ?>
         <?php endif ?>
     </div>
 </div>
+
 
 

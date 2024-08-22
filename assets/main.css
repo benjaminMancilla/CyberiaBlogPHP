@@ -1,14 +1,46 @@
-/* Success/error message boxes */
+body {
+    background-color: #1a001a; /* Un morado muy oscuro */
+    color: #f2f2f2; /* Un color claro para el texto */
+    font-family: sans-serif;
+    margin: 0;
+    padding: 0;
+}
+p {
+    text-align: left;
+    margin: 4px 0 4px 0;
+    padding: 0 0 0 0;
+}
+
+h2, .meta, p {
+    text-align: left;
+}
+
 .box {
     border: 1px dotted silver;
     border-radius: 5px;
     padding: 4px;
 }
 
+
 a {
+    color: #ffccff; /* Un color claro para los enlaces */
     text-decoration: none;
-    color: #007BFF;
 }
+
+a:hover {
+    color: #ffffff; /* Color para el hover de los enlaces */
+}
+
+.meta {
+    color: #d9b3ff; /* Un color más claro pero diferente para la meta información */
+}
+
+
+div[style*="border: 1px solid #ff6666;"] {
+    background-color: #330033;
+    color: #ff9999;
+}
+
 
 .error {
     background-color: #ff6666;
@@ -21,11 +53,14 @@ a {
 }
 
 .top-menu {
-    border: 2px solid silver;
+    border: 2px solid rgb(80, 80, 80);
+    justify-content: space-between;
+    position: relative;
+    border-width: 0 0 1px 0;
     min-height: 30px; 
     padding: 10px; 
     margin-bottom: 8px; 
-    background-color: #f4f4f4;
+    background-color: #10001f;
     display: flex;
     justify-content: flex-end; 
     align-items: center; 
@@ -47,48 +82,16 @@ a {
     margin-left: 3px;
 }
 
-
-h1, h2, h3 {
-    margin-top: 0;
-    margin-bottom: 8px;
-}
-body {
-    font-family: sans-serif;
+h2 {
+    color: #f2f2f2;
+    margin-top: 4px;
+    margin-bottom: 4px;
+    font-size: 14px;
 }
 
-.post-synopsis, .post {
-    padding-bottom: 8px;
-    border-bottom: 1px dotted silver;
-    margin-bottom: 20px;
-}
-.post-synopsis h2, .post h2 {
-    color: darkblue;
-}
-.post .date, .post-synopsis .meta {
-    color: white;
-    background-color: grey;
-    border-radius: 7px;
-    padding: 2px;
-    display: inline;
-    font-size: 0.95em;
-}
-.comment .comment-meta {
-    font-size: 0.85em;
-    color: grey;
-    border-top: 1px dotted silver;
-    padding-top: 8px;
-}
-
-.comment .comment-meta input {
-    float: right;
-}
-
-.comment-body p {
-    margin: 8px 4px;
-}
-.comment-list {
-    border-bottom: 1px dotted silver;
-    margin-bottom: 12px;
+h1,  h3 {
+    margin-top: 5px;
+    margin-bottom: 5px;
 }
 
 .box ul {
@@ -113,56 +116,21 @@ body {
     color: grey;
     float: left;
     text-align: right;
-    /* Some browsers make labels too tall, and as a result they incorrectly stack horizontally.
-        Let's reset each to the left-hand side to be sure. */
     clear: left;
 }
 
-/* Additional styles */
 .read-more a {
     text-decoration: none;
-    color: #007BFF;
+    color: #f2f2f2;
     font-size: 0.9em;
 }
 
-.post-list, .post {
-    margin: 0 auto;
-    padding: 20px;
-}
-
-.comment-list h3 {
-    font-size: 1.2em;
-    margin-bottom: 10px;
-    max-width: 900px;
-}   
-
-#post-list {
-    border-collapse: collapse;
-    border: 1px solid silver;
-}
-
-#post-list td, #post-list th {
-    padding: 8px;
-    text-align: left;
-}
-
-#post-list tbody tr:nth-child(odd) {
-    background-color: #f4f4f4;
-}
 .form-title {
     font-size: 1.5em;
     margin-bottom: 0.5em;
     color: #333;
 }
 
-/* General form styling */
-.comment-form {
-    max-width: 600px;
-    padding: 1em;
-    background-color: #f9f9f9;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-}
 
 /* Individual form groups */
 .form-group {
@@ -209,56 +177,101 @@ body {
     background-color: rgb(72, 21, 131);
 }
 
-.profile {
-    background-color: rgb(167, 231, 254);
-}
-.profile img {
-    background-color: "black";
-}
-
-.profile-image-large {
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    object-fit: cover;
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
 }
 
 
-.profile-image-medium {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    object-fit: cover;
+.content {
+    flex: 1;
+    max-width: 800px;
+    padding: 20px;
 }
 
 
-.profile-image-small {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    object-fit: cover;
-}
 
-.post-thumbnail {
+.content-container {
+    margin: 0;
     
-    justify-content: flex-end; 
-    margin-left: auto;
-    margin-right: auto;
-    max-width: 60%;
+    box-sizing: border-box;
+    align-items: center;
+}
+
+
+.main-container {
     
-}
-
-.post-thumbnail-container {
-    text-align: left;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    width: 30%;
-}
-
-.post-image-full {
+    justify-content: center;
+    padding-top: 60px; /* Espacio para la barra superior */
     width: 100%;
-    height: auto;
+    align-items: center;
+    
 }
+
+.top-bar {
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: #33334d;
+    color: #e0e0e0;
+    padding: 10px 20px;
+    z-index: 1000;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+.sidebar-left, .sidebar-right {
+    width: 120px;
+    position: fixed;
+    top: 60px; /* Espacio para la barra superior */
+    height: calc(100% - 60px); /* Asegura que ocupen toda la altura disponible */
+    background-color: #2a2a3a;
+    padding: 20px;
+    box-sizing: border-box;
+    z-index: 800;
+}
+
+.sidebar-left {
+    left: 0;
+}
+
+.sidebar-right {
+    right: 0;
+}
+
+.sidebar-right-placeholder {
+    width: 120px;
+}
+
+
+.menu-gif img {
+    height: 70px;
+    margin-left: -240px;
+    margin-bottom: -12px;
+    z-index: 2;
+
+}
+
+.menu-logo img {
+    height: 44px;
+    margin-top: 4px;
+    margin-left: 12px;
+    
+    z-index: 1;
+}
+
+.left-menu {
+    display: flex;
+    align-items: center;
+    position: absolute; /* Posiciona el contenedor a la izquierda del top-menu */
+    left: 0; /* Alinea el contenedor al borde izquierdo */
+    top: 50%; /* Ajusta verticalmente según sea necesario */
+    transform: translateY(-50%); /* Centra verticalmente el contenedor */
+}
+
+
+
 
 
 

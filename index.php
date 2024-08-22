@@ -13,45 +13,60 @@ $notFound = isset($_GET['not-found']);
         <?php require 'templates/head.php' ?>
     </head>
     <body>
-        <?php require 'templates/title.php' ?>
+        <?php require 'templates/top-menu.php' ?>
         
-        <?php if ($notFound): ?>
-            <div style="border: 1px solid #ff6666; padding: 6px;">
-                Error: cannot find the requested blog post
-            </div>
-        <?php endif ?>
-
-        <div class="post-list">
-            <?php foreach ($posts as $post): ?>
-                <div class="post-synopsis">
-                    <h2>
-                        <?php echo htmlEscape($post['title']) ?>
-                    </h2>
-                    <div class="meta">
-                        <?php echo convertSqlDate($post['created_at']) ?>
-                        (<?php echo $post['comment_count'] ?> comments)
-                    </div>
-                    <p>
-                        <?php echo convertNewlinesToParagraphs($post['body']) ?>
-                    </p>
-                    <div class="post-controls">
-                        <a
-                            href="view-post.php?post_id=<?php echo $post['id'] ?>"
-                        >Read more...</a>
-                        <?php if (isLoggedIn()): ?>
-                            |
-                            <a
-                                href="edit-post.php?post_id=<?php echo $post['id'] ?>"
-                            >Edit</a>
-                            |
-                            <a
-                                href="delete-post.php?post_id=<?php echo $post['id'] ?>"
-                            >Delete</a>
-                        <?php endif ?>
-                    </div>
+        <div class="main-container">
+            <?php //require 'templates/sidebar-left.php' ?>
+            
+            <div class="content-container">
+                <div class="post-list">
+                    <?php foreach ($posts as $post): ?>
+                        <?php $authAvatar = getProfileAvatar($pdo, $post['user_id']);
+                        $authVisibleName = getUserVisiblleName($pdo, $post['user_id'])
+                        ?>
+                        <div class="post-synopsis">
+                            <div class="post-main-container">
+                                <div class="post-creation-info">
+                                    <a href="" class="post-author-avatar">
+                                        <?php echo renderProfileImage($authAvatar, 'small'); ?>
+                                    </a>
+                                    <a href="" class="post-author-name">
+                                        <?php echo htmlEscape($authVisibleName) ?>
+                                    </a>
+                                    <div class="meta">
+                                        <?php echo convertSqlDate($post['created_at']) ?>
+                                        (<?php echo $post['comment_count'] ?> comments)
+                                    </div>
+                                </div>
+                                <h2>
+                                    <?php echo htmlEscape($post['title']) ?>
+                                </h2>
+                                
+                                <div class="post-body">
+                                    <?php echo convertNewlinesToParagraphs($post['body']) ?>
+                                </div>
+                                <?php if ($post['image']): ?>
+                                    <div class="post-index-image-container">
+                                        <div class="post-index-image">
+                                            <?php echo renderPostImageFull($post['image']) ?>
+                                        </div>
+                                    </div>
+                                <?php endif ?>
+                                <div class="post-controls">
+                                    <a href="view-post.php?post_id=<?php echo $post['id'] ?>">Read more...</a>
+                                    <?php if (isLoggedIn()): ?>
+                                        | <a href="edit-post.php?post_id=<?php echo $post['id'] ?>">Edit</a>
+                                        | <a href="delete-post.php?post_id=<?php echo $post['id'] ?>">Delete</a>
+                                    <?php endif ?>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endforeach ?>
                 </div>
-            <?php endforeach ?>
+            </div>
+
+            <!-- Espacio para futura sidebar derecha -->
         </div>
 
     </body>
-</html>    
+</html>

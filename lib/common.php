@@ -168,7 +168,7 @@ function getAllPosts(PDO $pdo)
 {
     $stmt = $pdo->query(
         'SELECT
-            id, title, created_at, body,
+            id, title, created_at, body, user_id, thumbnail, image,
             (SELECT COUNT(*) FROM comment WHERE comment.post_id = post.id) comment_count
         FROM
             post
@@ -319,7 +319,7 @@ function renderPostThumbnail($imageData, $altText = "Post Image Thumbnail")
 }
 
 
-function renderPostImageFull($imageData, $altText = "Full Resolution Post Image")
+function renderPostImageFull($imageData, $altText = "")
 {
     // Define a default image path for when no image is provided
     $defaultImage = '/blog/assets/images/default-post-image.png';
@@ -510,6 +510,22 @@ function makeThumbnail($imageSource, $maxSize = 600) {
     imagedestroy($thumbnail);
 
     return $thumbnailData;
+}
+
+function getUserVisiblleName($pdo, $user_id)
+{
+    $sql = "SELECT visibleName FROM profile WHERE user_id = :user_id";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute(['user_id' => $user_id]);
+    return $stmt->fetchColumn();
+}
+
+function getProfileAvatar($pdo, $user_id)
+{
+    $sql = "SELECT avatar FROM profile WHERE user_id = :user_id";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute(['user_id' => $user_id]);
+    return $stmt->fetchColumn();
 }
 
 
