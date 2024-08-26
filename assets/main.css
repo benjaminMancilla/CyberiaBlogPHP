@@ -1,6 +1,6 @@
 body {
-    background-color: #1a001a; /* Un morado muy oscuro */
-    color: #f2f2f2; /* Un color claro para el texto */
+    background-color: #110311;
+    color: #f2f2f2;
     font-family: sans-serif;
     margin: 0;
     padding: 0;
@@ -55,20 +55,27 @@ div[style*="border: 1px solid #ff6666;"] {
 .top-menu {
     border: 2px solid rgb(80, 80, 80);
     justify-content: space-between;
-    position: relative;
+    position: fixed;
     border-width: 0 0 1px 0;
-    min-height: 30px; 
+    min-height: 40px; 
     padding: 10px; 
     margin-bottom: 8px; 
-    background-color: #10001f;
+    background-color: #0d0d0d;;
     display: flex;
     justify-content: flex-end; 
     align-items: center; 
+    top: 0;
+    width: 100%;
+    z-index: 1000;
 }
+
+
 
 .menu-options {
     display: flex;
     align-items: center;
+    right: 34px;
+    position: absolute;
 }
 
 .menu-options img {
@@ -194,7 +201,8 @@ h1,  h3 {
 
 .content-container {
     margin: 0;
-    
+    padding-top: 50px;
+    padding-left: calc(10% + 20px);
     box-sizing: border-box;
     align-items: center;
 }
@@ -203,7 +211,8 @@ h1,  h3 {
 .main-container {
     
     justify-content: center;
-    padding-top: 60px; /* Espacio para la barra superior */
+    padding-top: 60px;
+    padding-left: 277px;
     width: 100%;
     align-items: center;
     

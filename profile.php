@@ -32,25 +32,32 @@ $isOwner = ($profileID === $loggedInUserID) || isAdmin();
     <title>Profile of <?php echo htmlEscape($userProfile['visibleName']); ?></title>
     <?php require 'templates/head.php'; ?>
 </head>
-<body class="profile">
-
+<body>
     <?php require 'templates/top-menu.php'; ?>
-    
-    <h1>Profile of <?php echo htmlEscape($userProfile['visibleName']); ?></h1>
+    <?php require 'templates/sidebar-left.php'; ?>
+    <div class = "main-container">
+        <div class="content-container">
+            <div class="profile">
+                
+                
+                <h1>Profile of <?php echo htmlEscape($userProfile['visibleName']); ?></h1>
 
-    <p><strong>Username:</strong> <?php echo htmlEscape($userProfile['username']); ?></p>
-    <p><strong>About Me:</strong> <?php echo nl2br(htmlEscape($userProfile['aboutMe'])); ?></p>
-    <p><strong>Website:</strong> <a href="<?php echo htmlEscape($userProfile['website']); ?>"><?php echo htmlEscape($userProfile['website']); ?></a></p>
-    <p><strong>Equipped Badge:</strong> <?php echo htmlEscape($userProfile['equippedBadge']); ?></p>
-    <p><strong>Badges:</strong> <?php echo htmlEscape($userProfile['badges']); ?></p>
-    <p><strong>Avatar:</strong></p>
-    <?php echo renderProfileImage($userProfile['avatar'], 'large'); ?>
-    <br>
-    <?php if ($isOwner): ?>
-        <a href="edit-profile.php">Edit Profile</a>
-    <?php endif; ?>
- 
+                <p><strong>Username:</strong> <?php echo htmlEscape($userProfile['username']); ?></p>
+                <p><strong>About Me:</strong> <?php echo nl2br(htmlEscape($userProfile['aboutMe'])); ?></p>
+                <p><strong>Website:</strong> <a href="<?php echo htmlEscape($userProfile['website']); ?>"><?php echo htmlEscape($userProfile['website']); ?></a></p>
+                <p><strong>Equipped Badge:</strong> <?php echo htmlEscape($userProfile['equippedBadge']); ?></p>
+                <p><strong>Badges:</strong> <?php echo htmlEscape($userProfile['badges']); ?></p>
+                <p><strong>Avatar:</strong></p>
+                <?php echo renderProfileImage($userProfile['avatar'], 'large'); ?>
+                <br>
+                <?php if ($isOwner): ?>
+                    <a href="edit-profile.php">Edit Profile</a>
+                <?php endif; ?>
 
+            </div>
+
+        </div>
+    </div>
 </body>
 </html>
 

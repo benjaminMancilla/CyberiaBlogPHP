@@ -107,8 +107,17 @@ function redirectAndExit($script)
 function convertNewlinesToParagraphs($text)
 {
     $escaped = htmlEscape($text);
-    return '<p>' . str_replace("\\n", "</p><p>", $escaped) . '</p>';
+    $formatted = nl2br($escaped);
+    return $formatted;
 }
+
+function convertNewlinesToSumary($text)
+{
+    $escaped = htmlEscape($text);
+    $formatted = substr($escaped, 0, 300);
+    return $formatted;
+}
+
 
 
 function getSqlDateForNow()

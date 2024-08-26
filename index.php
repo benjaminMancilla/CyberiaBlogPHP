@@ -16,13 +16,15 @@ $notFound = isset($_GET['not-found']);
         <?php require 'templates/top-menu.php' ?>
         
         <div class="main-container">
-            <?php //require 'templates/sidebar-left.php' ?>
+            <!-- Incluir la sidebar izquierda -->
+            <?php require 'templates/sidebar-left.php' ?>
             
             <div class="content-container">
                 <div class="post-list">
                     <?php foreach ($posts as $post): ?>
-                        <?php $authAvatar = getProfileAvatar($pdo, $post['user_id']);
-                        $authVisibleName = getUserVisiblleName($pdo, $post['user_id'])
+                        <?php
+                        $authAvatar = getProfileAvatar($pdo, $post['user_id']);
+                        $authVisibleName = getUserVisiblleName($pdo, $post['user_id']);
                         ?>
                         <div class="post-synopsis">
                             <div class="post-main-container">
@@ -43,7 +45,7 @@ $notFound = isset($_GET['not-found']);
                                 </h2>
                                 
                                 <div class="post-body">
-                                    <?php echo convertNewlinesToParagraphs($post['body']) ?>
+                                    <?php echo convertNewlinesToSumary($post['body']) ?>
                                 </div>
                                 <?php if ($post['image']): ?>
                                     <div class="post-index-image-container">
@@ -70,3 +72,4 @@ $notFound = isset($_GET['not-found']);
 
     </body>
 </html>
+
