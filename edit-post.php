@@ -128,68 +128,78 @@ if ($_POST)
     </head>
     <body>
         <?php require 'templates/top-menu.php' ?>
-        <?php if(isset($_GET['post_id'])): ?>
-            <h1>Edit post</h1>
-        <?php else: ?>
-            <h1>New post</h1>
-        <?php endif ?>
-        
-        <?php if ($errors): ?>
-            <div class="error box">
-                <ul>
-                    <?php foreach ($errors as $error): ?>
-                        <li><?php echo $error ?></li>
-                 <?php endforeach ?>
-                </ul>
+        <?php require 'templates/sidebar-left.php' ?>
+        <div class="main-container">
+            <div class="content-container">
+                <div class="principal-column">
+                    <?php if(isset($_GET['post_id'])): ?>
+                            <h1>Edit post</h1>
+                        <?php else: ?>
+                            <h1>New post</h1>
+                        <?php endif ?>
+                        
+                        <?php if ($errors): ?>
+                            <div class="error box">
+                                <ul>
+                                    <?php foreach ($errors as $error): ?>
+                                        <li><?php echo $error ?></li>
+                                <?php endforeach ?>
+                                </ul>
+                            </div>
+                        <?php endif ?>
+
+                        <form method="post" class="post-form user-form" enctype="multipart/form-data">
+                        <div>
+                            <label for="post-title">Title:</label>
+                            <input
+                                id="post-title"
+                                name="post-title"
+                                type="text"
+                                value="<?php echo htmlEscape($title) ?>"
+                            />
+                        </div>
+                        <div>
+                            <label for="post-body">Body:</label>
+                            <textarea
+                                id="post-body"
+                                name="post-body"
+                                rows="12"
+                                cols="70"
+                            ><?php echo htmlEscape($body) ?></textarea>
+                        </div>
+                        <div class="image-upload">
+                            <input
+                                id="post-image"
+                                name="post-image"
+                                type="file"
+                                accept="image/jpeg, image/png"
+                            />
+                            <?php if ($postId): ?>
+                                <input
+                                type="checkbox"
+                                name="delete-image"
+                                id="delete-image"
+                                    
+                            />
+                            Delete Image
+                            <?php endif ?>
+                            
+                            
+                        </div>
+
+                        
+                        <div>
+                            <input
+                                type="submit"
+                                value="Save post"
+                            />
+                            <a href="index.php">Cancel</a>
+                        </div>
+                    </form>
+                </div>
             </div>
-        <?php endif ?>
-
-        <form method="post" class="post-form user-form" enctype="multipart/form-data">
-        <div>
-            <label for="post-title">Title:</label>
-            <input
-                id="post-title"
-                name="post-title"
-                type="text"
-                value="<?php echo htmlEscape($title) ?>"
-            />
         </div>
-        <div>
-            <label for="post-body">Body:</label>
-            <textarea
-                id="post-body"
-                name="post-body"
-                rows="12"
-                cols="70"
-            ><?php echo htmlEscape($body) ?></textarea>
-        </div>
-        <div>
-            <label for="post-image">Image:</label>
-            <input
-                id="post-image"
-                name="post-image"
-                type="file"
-                accept="image/jpeg, image/png"
-            />
-            <input
-                    type="checkbox"
-                    name="delete-image"
-                    id="delete-image"
-                    
-                />
-                Delete Image
-            
-        </div>
-
         
-        <div>
-            <input
-                type="submit"
-                value="Save post"
-            />
-            <a href="index.php">Cancel</a>
-        </div>
-    </form>
     </body>
 </html>
 

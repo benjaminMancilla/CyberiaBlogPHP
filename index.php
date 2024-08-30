@@ -14,10 +14,11 @@ $notFound = isset($_GET['not-found']);
     </head>
     <body>
         <?php require 'templates/top-menu.php' ?>
+        <?php require 'templates/sidebar-left.php' ?>
         
         <div class="main-container">
             <!-- Incluir la sidebar izquierda -->
-            <?php require 'templates/sidebar-left.php' ?>
+            
             
             <div class="content-container">
                 <div class="post-list">

@@ -1,5 +1,5 @@
 body {
-    background-color: #110311;
+    background: linear-gradient(to right, #000000, #3b083b);
     color: #f2f2f2;
     font-family: sans-serif;
     margin: 0;
@@ -23,16 +23,18 @@ h2, .meta, p {
 
 
 a {
-    color: #ffccff; /* Un color claro para los enlaces */
+    color: #ffccff;
     text-decoration: none;
 }
 
 a:hover {
-    color: #ffffff; /* Color para el hover de los enlaces */
+    color: #ffffff;
 }
 
+
+
 .meta {
-    color: #d9b3ff; /* Un color más claro pero diferente para la meta información */
+    color: #d9b3ff;
 }
 
 
@@ -116,9 +118,18 @@ h1,  h3 {
 .user-form textarea {
     margin: 4px;
 }
+
+.user-form textarea,
+.user-form input[type="text"] {
+    background-color: #2c2c2c;
+    border: none;
+    color: #f2f2f2;
+    padding: 4px;
+    border-radius: 16px;
+    
+}
 .user-form label {
     font-size: 0.95em;
-    margin: 6px;
     width: 7em;
     color: grey;
     float: left;
@@ -139,19 +150,16 @@ h1,  h3 {
 }
 
 
-/* Individual form groups */
 .form-group {
     margin-bottom: 1em;
 }
 
-/* Styling for form labels */
 .form-label {
     display: block;
     margin-bottom: 0.5em;
     font-weight: bold;
 }
 
-/* Styling for text inputs */
 .form-input {
     width: 30%;
     padding: 0.3em;
@@ -160,7 +168,6 @@ h1,  h3 {
     border-radius: 3px;
 }
 
-/* Styling for the textarea */
 .form-textarea {
     width: 40%;
     padding: 0.5em;
@@ -169,7 +176,6 @@ h1,  h3 {
     border-radius: 3px;
 }
 
-/* Styling for the submit button */
 .form-submit-button {
     padding: 0.3em 0.7em;
     font-size: 1em;
@@ -202,19 +208,19 @@ h1,  h3 {
 .content-container {
     margin: 0;
     padding-top: 50px;
-    padding-left: calc(10% + 20px);
+    padding-left: calc(10% + 80px);
     box-sizing: border-box;
     align-items: center;
 }
 
 
 .main-container {
-    
     justify-content: center;
     padding-top: 60px;
     padding-left: 277px;
-    width: 100%;
+    width: auto;
     align-items: center;
+    
     
 }
 
@@ -233,8 +239,8 @@ h1,  h3 {
 .sidebar-left, .sidebar-right {
     width: 120px;
     position: fixed;
-    top: 60px; /* Espacio para la barra superior */
-    height: calc(100% - 60px); /* Asegura que ocupen toda la altura disponible */
+    top: 60px;
+    height: calc(100% - 60px);
     background-color: #2a2a3a;
     padding: 20px;
     box-sizing: border-box;
@@ -273,11 +279,54 @@ h1,  h3 {
 .left-menu {
     display: flex;
     align-items: center;
-    position: absolute; /* Posiciona el contenedor a la izquierda del top-menu */
-    left: 0; /* Alinea el contenedor al borde izquierdo */
-    top: 50%; /* Ajusta verticalmente según sea necesario */
-    transform: translateY(-50%); /* Centra verticalmente el contenedor */
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
 }
+
+.main-logo img {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    left: 24%;
+    top: 32%;
+    width: 500px;
+    transform: translate(-50%, -50%);
+}
+
+.principal-column {
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    justify-content: center;
+    width: 56%;
+    height: 100vh;
+    /* padding: 20px; */
+    box-sizing: border-box;
+}
+
+.principal-column form {
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    width: 100%;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);
+    z-index: 2;
+}
+
+.image-upload input {
+    
+    
+}
+
+
+
+
+
+
 
 
 

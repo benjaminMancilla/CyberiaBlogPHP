@@ -49,91 +49,87 @@ if ($_POST)
 
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Login</title>
-        <?php require 'templates/head.php' ?>
-    </head>
-    <body>
-        <?php require 'templates/title.php' ?>
+<head>
+    <title>Login</title>
+    <?php require 'templates/head.php' ?>
+    <link rel="stylesheet" href="assets/login.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+    <?php //<script src="assets/login-bg.js"></script> ?>
 
-        <?php // If we have a username, then the user got something wrong, so let's have an error ?>
+    <div class="main-logo">
+        <a href="index.php" class="no-class">
+            <img src="assets/images/logo.png" alt="Background Image">
+        </a>
+    </div>
+
+    <div class="login-main-container">
         <?php if ($username): ?>
             <?php if ($username === 'anonymous'): ?>
                 <div class="error box">
                     :)
                 </div>
-                <?php else: ?>
+            <?php else: ?>
                 <div class="error box">
                     The username or password is incorrect, try again
                 </div>
-                <?php endif ?>
+            <?php endif ?>
         <?php endif ?>
-        
 
-        <p>Login here:</p>
-        <form
-            method="post"
-            action="login.php?action=login"
-            class="user-form"
-        >
-            <div>
-            <label for="username">
-                    Username:
-                </label>
+        <!-- Login Form -->
+        <div id="login-container" class="login-container">
+            <p>Login here:</p>
+            <form method="post" action="login.php?action=login" class="user-form">
+                <div>
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" name="username" value="<?php echo htmlEscape($username) ?>" />
+                </div>
+                <div>
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" name="password" />
+                </div>
+                <p>
+                    <input type="submit" value="Login" />
+                </p>
+            </form>
+            <button onclick="toggleForms()">Sign up</button>
+        </div>
 
-                <input
-                    type="text"
-                    id="username"
-                    name="username"
-                    value="<?php echo htmlEscape($username) ?>"
-                />
-            </div>
-            <div>
-                <label for="password">
-                    Password:
-                </label>
-                <input
-                    type="password"
-                    id="password"
-                    name="password"
-                />
-            </div>
-            <p>
-                <input type="submit" value="Login" />
-            </p>
-        </form>
-        <p>Sign up here:</p>
-        <form
-            method="post"
-            action="login.php?action=signup"
-            class="user-form"
-        >
-            <div>
-            <label for="username">
-                    Username:
-                </label>
+        <!-- Signup Form (Initially Hidden) -->
+        <div id="signup-container" class="signup-container" style="display: none;">
+            <p>Sign up here:</p>
+            <form method="post" action="login.php?action=signup" class="user-form">
+                <div>
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" name="username" value="<?php echo htmlEscape($username) ?>" />
+                </div>
+                <div>
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" name="password" />
+                </div>
+                <p>
+                    <input type="submit" value="Sign up" />
+                </p>
+            </form>
+            <button onclick="toggleForms()">Login</button>
+        </div>
+    </div>
 
-                <input
-                    type="text"
-                    id="username"
-                    name="username"
-                    value="<?php echo htmlEscape($username) ?>"
-                />
-            </div>
-            <div>
-                <label for="password">
-                    Password:
-                </label>
-                <input
-                    type="password"
-                    id="password"
-                    name="password"
-                />
-            </div>
-            <p>
-                <input type="submit" value="Sign up" />
-            </p>
-        </form>
-
-    </body>
+    <script>
+        function toggleForms() {
+            var loginContainer = document.getElementById('login-container');
+            var signupContainer = document.getElementById('signup-container');
+            
+            if (loginContainer.style.display === 'none') {
+                loginContainer.style.display = 'block';
+                signupContainer.style.display = 'none';
+            } else {
+                loginContainer.style.display = 'none';
+                signupContainer.style.display = 'block';
+            }
+        }
+    </script>
+</body>
 </html>
