@@ -59,10 +59,13 @@ if ($_POST)
 <body>
     <?php //<script src="assets/login-bg.js"></script> ?>
 
-    <div class="main-logo">
-        <a href="index.php" class="no-class">
+    <div class="main-logo-container">
+        <a href="index.php" class="main-logo">
             <img src="assets/images/logo.png" alt="Background Image">
         </a>
+        <div class="main-logo">
+            <img src="assets/images/p-logo.png" alt="Background Image">
+        </div>
     </div>
 
     <div class="login-main-container">
@@ -79,43 +82,41 @@ if ($_POST)
         <?php endif ?>
 
         <!-- Login Form -->
-        <div id="login-container" class="login-container">
-            <p>Login here:</p>
-            <form method="post" action="login.php?action=login" class="user-form">
+        <div id="login-container" class="login-container" style="display: block;">
+            <h1>Login here:</h1>
+            <form method="post" action="login.php?action=login" class="user-form" >
                 <div>
-                    <label for="username">Username:</label>
-                    <input type="text" id="username" name="username" value="<?php echo htmlEscape($username) ?>" />
+                    <input type="text" id="username" name="username" placeholder="Username" value="<?php echo htmlEscape($username) ?>" />
                 </div>
                 <div>
-                    <label for="password">Password:</label>
-                    <input type="password" id="password" name="password" />
+                    <input type="password" id="password" name="password" placeholder="Password" />
                 </div>
-                <p>
+                <div id="sumbit-login-button">
                     <input type="submit" value="Login" />
-                </p>
+                </div>
             </form>
             <button onclick="toggleForms()">Sign up</button>
         </div>
 
         <!-- Signup Form (Initially Hidden) -->
         <div id="signup-container" class="signup-container" style="display: none;">
-            <p>Sign up here:</p>
+            <h1>Sign up here:</h1>
             <form method="post" action="login.php?action=signup" class="user-form">
                 <div>
-                    <label for="username">Username:</label>
-                    <input type="text" id="username" name="username" value="<?php echo htmlEscape($username) ?>" />
+                    <input type="text" id="username" name="username" placeholder="Username" value="<?php echo htmlEscape($username) ?>" />
                 </div>
                 <div>
-                    <label for="password">Password:</label>
-                    <input type="password" id="password" name="password" />
+                    <input type="password" id="password" name="password" placeholder="Password" />
                 </div>
-                <p>
+                <div id="sumbit-login-button">
                     <input type="submit" value="Sign up" />
-                </p>
+                </div>
             </form>
             <button onclick="toggleForms()">Login</button>
         </div>
     </div>
+
+    <?php require 'templates/reserved-rights.php' ?>
 
     <script>
         function toggleForms() {
