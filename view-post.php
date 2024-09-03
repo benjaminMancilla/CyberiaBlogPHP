@@ -104,33 +104,37 @@ else
         <div class="main-container">
             <?php require 'templates/sidebar-left.php' ?>
                 <div class="content-container">
-                    <div class="post">
-                        <h2>
-                            <?php echo htmlEscape($row['title']) ?>
-                        </h2>
-                        <h3>
-                            <a href="profile.php?profile_id=<?php echo $row['user_id']?>">
-                            <?php echo htmlEscape($row['author']) ?>
-                            </a>
-                        </h3>
-                        <div class="date">
-                            <?php echo convertSqlDate($row['created_at']) ?>
-                        </div>
-                        <?php if ($row['thumbnail']): ?>
-
-                            <div class="post-thumbnail-container">
-                                <?php echo renderPostThumbnail($row['thumbnail'], "Thumbnail for " . htmlEscape($row['title'])); ?>
+                    <div class="principal-column">
+                        <div class="post">
+                            <h2>
+                                <?php echo htmlEscape($row['title']) ?>
+                            </h2>
+                            <h3>
+                                <a href="profile.php?profile_id=<?php echo $row['user_id']?>">
+                                <?php echo htmlEscape($row['author']) ?>
+                                </a>
+                            </h3>
+                            <div class="date">
+                                <?php echo convertSqlDate($row['created_at']) ?>
                             </div>
+                            <?php if ($row['thumbnail']): ?>
 
-                        <?php endif ?>
-                        <div class="post-body">
-                            <?php echo convertNewlinesToParagraphs($row['body']) ?>
+                                <div class="post-thumbnail-container">
+                                    <?php echo renderPostThumbnail($row['thumbnail'], "Thumbnail for " . htmlEscape($row['title'])); ?>
+                                </div>
+
+                            <?php endif ?>
+                            <div class="post-body">
+                                <?php echo convertNewlinesToParagraphs($row['body']) ?>
+                            </div>
                         </div>
+
+                        <?php require 'templates/list-comments.php' ?>
+
+                        <?php require 'templates/comment-form.php' ?>
+
                     </div>
-
-                <?php require 'templates/list-comments.php' ?>
-
-                <?php require 'templates/comment-form.php' ?>
+                    
 
             </div>
         </div>

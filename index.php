@@ -17,9 +17,6 @@ $notFound = isset($_GET['not-found']);
         <?php require 'templates/sidebar-left.php' ?>
         
         <div class="main-container">
-            <!-- Incluir la sidebar izquierda -->
-            
-            
             <div class="content-container">
                 <div class="post-list">
                     <?php foreach ($posts as $post): ?>
@@ -46,7 +43,7 @@ $notFound = isset($_GET['not-found']);
                                 </h2>
                                 
                                 <div class="post-body">
-                                    <?php echo convertNewlinesToSumary($post['body']) ?>
+                                    <p><?php echo convertNewlinesToSumary($post['body']) ?></p>
                                 </div>
                                 <?php if ($post['image']): ?>
                                     <div class="post-index-image-container">

@@ -46,33 +46,39 @@ $users = getAllUsers($pdo);
     </head>
     <body>
         <?php require 'templates/top-menu.php' ?>
-        <h1>User list</h1>
-        <p>You have <?php echo count($users) ?> users.</p>
-        <form method="post">
-            <table id="user-list">
-                <thead>
-                    <tr>
-                        <th>Username</th>
-                        <th>Role</th>
-                        <th>Creation date</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($users as $user): ?>
-                        <tr>
-                            <td><a href="profile.php?profile_id=<?php echo $user['id']?>"><?php echo htmlEscape($user['username']) ?></td>
-                            <td><?php echo htmlEscape($user['role']) ?></td>
-                            <td><?php echo convertSqlDate($user['created_at']) ?></td>
+        <?php require 'templates/sidebar-left.php' ?>
+        <div class="main-container">
+            <div class="content-container">
+                <h1>User list</h1>
+                <p>You have <?php echo count($users) ?> users.</p>
+                <form method="post">
+                    <table id="user-list">
+                        <thead>
+                            <tr>
+                                <th>Username</th>
+                                <th>Role</th>
+                                <th>Creation date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($users as $user): ?>
+                                <tr>
+                                    <td><a href="profile.php?profile_id=<?php echo $user['id']?>"><?php echo htmlEscape($user['username']) ?></td>
+                                    <td><?php echo htmlEscape($user['role']) ?></td>
+                                    <td><?php echo convertSqlDate($user['created_at']) ?></td>
 
-                            <td>
-                                <button type="submit" name="delete-user[<?php echo $user['id'] ?>]">Delete</button>
-                            </td>
-                        </tr>
-                    <?php endforeach ?>
-                </tbody>
-            </table>
-        </form>
+                                    <td>
+                                        <button type="submit" name="delete-user[<?php echo $user['id'] ?>]">Delete</button>
+                                    </td>
+                                </tr>
+                            <?php endforeach ?>
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+        </div>
+        
     </body>
 </html>
 

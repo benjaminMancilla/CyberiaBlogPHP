@@ -50,50 +50,55 @@ $posts = getAllPosts($pdo);
     </head>
     <body>
         <?php require 'templates/top-menu.php' ?>
-        <h1>Post list</h1>
-        <p>You have <?php echo count($posts) ?> posts.</p>
-        <form method="post">
-            <table id="post-list">
-                <thead>
-                    <tr>
-                        <th>Title</th>
-                        <th>Creation date</th>
-                        <th>Comments</th>
-                        <th />
-                        <th />
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($posts as $post): ?>
-                        <tr>
-                            <td>
-                                <a
-                                    href="view-post.php?post_id=<?php echo $post['id']?>"
-                                ><?php echo htmlEscape($post['title']) ?></a>
-                            </td>
-                            <td>
-                                <?php echo convertSqlDate($post['created_at']) ?>
-                            </td>
-                            <td>
-                                <?php echo $post['comment_count'] ?>
-                            </td>
-                            <td>
-                                <a href="edit-post.php?post_id=<?php echo $post['id']?>">Edit</a>
-                            </td>
-                            <td>
-                                <input
-                                    type="submit"
-                                    name="delete-post[<?php echo $post['id']?>]"
-                                    value="Delete"
-                                />
-                            </td>
+        <?php require 'templates/sidebar-left.php' ?>
+        <div class="main-container">
+            <div class="content-container">
+                <h1>Post list</h1>
+                <p>You have <?php echo count($posts) ?> posts.</p>
+                <form method="post">
+                    <table id="post-list">
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Creation date</th>
+                                <th>Comments</th>
+                                <th />
+                                <th />
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($posts as $post): ?>
+                                <tr>
+                                    <td>
+                                        <a
+                                            href="view-post.php?post_id=<?php echo $post['id']?>"
+                                        ><?php echo htmlEscape($post['title']) ?></a>
+                                    </td>
+                                    <td>
+                                        <?php echo convertSqlDate($post['created_at']) ?>
+                                    </td>
+                                    <td>
+                                        <?php echo $post['comment_count'] ?>
+                                    </td>
+                                    <td>
+                                        <a href="edit-post.php?post_id=<?php echo $post['id']?>">Edit</a>
+                                    </td>
+                                    <td>
+                                        <input
+                                            type="submit"
+                                            name="delete-post[<?php echo $post['id']?>]"
+                                            value="Delete"
+                                        />
+                                    </td>
 
-                        </tr>
-                    <?php endforeach ?>
-                    
-                </tbody>
-            </table>
-        </form>
+                                </tr>
+                            <?php endforeach ?>
+                            
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+        </div>
     </body>
 </html>
 

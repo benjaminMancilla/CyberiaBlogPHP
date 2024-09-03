@@ -115,27 +115,93 @@ h1,  h3 {
     margin-bottom: 8px;
 }
 
-.user-form div {
-    margin-bottom: 10px;
+.post-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    width: 100%;
+    margin-top: 20px;
+}
+
+.user-form {
     display: flex;
     flex-direction: column;
     align-items: center;
     width: 100%;
     justify-content: center;
+    margin-top: 20px;
+}
+
+.user-form div,
+.post-form div {
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+}
+
+.post-form > div:last-child {
+    display: flex;
+    justify-content: flex-end;
+    flex-direction: row; 
+    width: 100%; 
+    margin-top: 14px;
+}
+
+.post-form input[type="submit"] {
+    background-color: #1ea692;
+    color: white;
+    padding: 10px 20px;
+    margin-left: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.post-form input[type="submit"]:hover {
+    background-color: #19c3a9; 
+}
+
+.post-form a {
+    text-decoration: none;
+    padding: 10px 20px;
+    margin-left: 10px;
+    background-color: #ccc; /* Color del enlace de cancelación */
+    color: black;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.post-form a:hover {
+    background-color: #a1a1a1; /* Color al pasar el cursor */
 }
 
 
 
 .user-form textarea,
 .user-form input[type="text"],
-.user-form input[type="password"] {
+.user-form input[type="password"],
+.post-form input[type="text"],
+.post-form textarea,
+.post-form input[type="password"] {
     width: 99%;
     height: 46px;
     background-color: #4d4d4d;
     border: none;
     color: #f2f2f2;
-    border-radius: 6px;
+    border-radius: 12px;
     font-size: medium;
+    padding-left: 16px;
+}
+
+.user-form textarea,
+.post-form textarea {
+    height: 100px;
+    padding-top: 10px;
 }
 
 
@@ -334,8 +400,6 @@ h1,  h3 {
     align-items: left;
     justify-content: center;
     width: 56%;
-    height: 100vh;
-    /* padding: 20px; */
     box-sizing: border-box;
 }
 
@@ -343,7 +407,7 @@ h1,  h3 {
     display: flex;
     flex-direction: column;
     align-items: left;
-    width: 100%;
+    width: auto;
     padding: 20px;
     border-radius: 5px;
     box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);
@@ -359,6 +423,11 @@ h1,  h3 {
     z-index: 1000;
     padding-left: 20px;
 }
+
+textarea {
+    resize: vertical; /* Permite el redimensionamiento solo en dirección vertical */
+}
+
 
 
 

@@ -2,6 +2,7 @@
 require_once 'lib/common.php';
 require_once 'lib/edit-post.php';
 require_once 'lib/view-post.php';
+
 session_start();
 
 
@@ -121,10 +122,17 @@ if ($_POST)
 ?>
 
 <!DOCTYPE html>
+<link rel="stylesheet" type="text/css" href="assets/post.css" />
 <html>
     <head>
         <title>Cyberia | New post</title>
         <?php require 'templates/head.php' ?>
+        <script>
+            function toggleForm(type) {
+                document.getElementById('text-form').style.display = type === 'text' ? 'block' : 'none';
+                document.getElementById('media-form').style.display = type === 'media' ? 'block' : 'none';
+            }
+        </script>
     </head>
     <body>
         <?php require 'templates/top-menu.php' ?>
@@ -133,40 +141,64 @@ if ($_POST)
             <div class="content-container">
                 <div class="principal-column">
                     <?php if(isset($_GET['post_id'])): ?>
-                            <h1>Edit post</h1>
-                        <?php else: ?>
-                            <h1>New post</h1>
-                        <?php endif ?>
-                        
-                        <?php if ($errors): ?>
-                            <div class="error box">
-                                <ul>
-                                    <?php foreach ($errors as $error): ?>
-                                        <li><?php echo $error ?></li>
-                                <?php endforeach ?>
-                                </ul>
-                            </div>
-                        <?php endif ?>
+                        <h1>Edit post</h1>
+                    <?php else: ?>
+                        <h1>Create Post</h1>
+                    <?php endif ?>
 
-                        <form method="post" class="post-form user-form" enctype="multipart/form-data">
-                        <div>
-                            <label for="post-title">Title:</label>
+                    <?php if ($errors): ?>
+                        <div class="error box">
+                            <ul>
+                                <?php foreach ($errors as $error): ?>
+                                    <li><?php echo $error ?></li>
+                                <?php endforeach ?>
+                            </ul>
+                        </div>
+                    <?php endif ?>
+
+                    <div class="toggle-type-post">
+                        <button onclick="toggleForm('text')" >Text</button>
+                        <button onclick="toggleForm('media')" >Media</button>
+                    </div>
+
+                    <form id="text-form" method="post" class="post-form" enctype="multipart/form-data" style="display: block">
+                        <div id="edit-post-title">
                             <input
                                 id="post-title"
                                 name="post-title"
                                 type="text"
                                 value="<?php echo htmlEscape($title) ?>"
+                                placeholder="Title"
                             />
                         </div>
-                        <div>
-                            <label for="post-body">Body:</label>
+
+                        <div id="edit-post-body">
                             <textarea
                                 id="post-body"
                                 name="post-body"
                                 rows="12"
                                 cols="70"
+                                placeholder="Body"
                             ><?php echo htmlEscape($body) ?></textarea>
                         </div>
+
+                        <div>
+                            <a href="index.php">Cancel</a>
+                            <input type="submit" value="Save post" />
+                        </div>
+                    </form>
+
+                    <form id="media-form" method="post" class="post-form" enctype="multipart/form-data" style="display: none;">
+                        <div id="edit-post-title">
+                            <input
+                                id="post-title"
+                                name="post-title"
+                                type="text"
+                                value="<?php echo htmlEscape($title) ?>"
+                                placeholder="Title"
+                            />
+                        </div>
+
                         <div class="image-upload">
                             <input
                                 id="post-image"
@@ -176,24 +208,17 @@ if ($_POST)
                             />
                             <?php if ($postId): ?>
                                 <input
-                                type="checkbox"
-                                name="delete-image"
-                                id="delete-image"
-                                    
-                            />
-                            Delete Image
+                                    type="checkbox"
+                                    name="delete-image"
+                                    id="delete-image"
+                                />
+                                Delete Image
                             <?php endif ?>
-                            
-                            
                         </div>
 
-                        
                         <div>
-                            <input
-                                type="submit"
-                                value="Save post"
-                            />
                             <a href="index.php">Cancel</a>
+                            <input type="submit" value="Save post" />
                         </div>
                     </form>
                 </div>
@@ -202,6 +227,7 @@ if ($_POST)
         
     </body>
 </html>
+
 
 
 

@@ -12,7 +12,15 @@
 }
 
 #post-list tbody tr:nth-child(odd) {
-    background-color: #f4f4f4;
+    background-color: #282828;
+}
+
+.post-body {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: pre-wrap;
+    max-width: 100%;
+    overflow-x: auto;
 }
 
 
@@ -23,6 +31,8 @@
     border-radius: 16px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     text-align: left;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .post-synopsis h2, .post h2 {
