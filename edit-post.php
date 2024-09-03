@@ -10,6 +10,7 @@ session_start();
 $title = $body = '';
 // Init database and get handle
 $pdo = getPDO();
+$profile = getAuthProfile($pdo);
 
 $postId = null;
 if (isset($_GET['post_id']))
@@ -137,6 +138,7 @@ if ($_POST)
     <body>
         <?php require 'templates/top-menu.php' ?>
         <?php require 'templates/sidebar-left.php' ?>
+        <?php require 'templates/bg-logo.php' ?>
         <div class="main-container">
             <div class="content-container">
                 <div class="principal-column">

@@ -5,6 +5,8 @@ require_once 'lib/view-post.php';
 require_once 'lib/list-posts.php';
 
 session_start();
+$pdo = getPDO();
+$profile = getAuthProfile($pdo);
 
 
 
@@ -45,6 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
         redirectAndExit('index.php');
     }
 }
+
 ?>
 <!DOCTYPE html>
 <html>

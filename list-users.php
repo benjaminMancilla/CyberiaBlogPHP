@@ -36,6 +36,7 @@ if (!empty($_POST))
 
 $pdo = getPDO();
 $users = getAllUsers($pdo);
+$profile = getAuthProfile($pdo);
 ?>
 
 <!DOCTYPE html>
@@ -47,6 +48,7 @@ $users = getAllUsers($pdo);
     <body>
         <?php require 'templates/top-menu.php' ?>
         <?php require 'templates/sidebar-left.php' ?>
+        <?php require 'templates/bg-logo.php' ?>
         <div class="main-container">
             <div class="content-container">
                 <h1>User list</h1>

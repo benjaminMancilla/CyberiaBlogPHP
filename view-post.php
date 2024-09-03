@@ -86,6 +86,8 @@ else
     );
 }
 
+$profile = getAuthProfile($pdo);
+
 
 ?>
 <!DOCTYPE html>
@@ -99,10 +101,11 @@ else
     </head>
     <body>
         <?php require 'templates/top-menu.php' ?>
-
+        <?php require 'templates/bg-logo.php' ?>
+        <?php require 'templates/sidebar-left.php' ?>
         
         <div class="main-container">
-            <?php require 'templates/sidebar-left.php' ?>
+            
                 <div class="content-container">
                     <div class="principal-column">
                         <div class="post">

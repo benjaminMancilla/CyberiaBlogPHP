@@ -9,6 +9,7 @@ if (!isLoggedIn()) {
 
 $pdo = getPDO();
 $loggedInUserID = getAuthUserId($pdo);
+$profile = getAuthProfile($pdo);
 
 // Get the profile_id from the URL or default to the logged-in user
 $profileID = isset($_GET['profile_id']) ? (int) $_GET['profile_id'] : $loggedInUserID;

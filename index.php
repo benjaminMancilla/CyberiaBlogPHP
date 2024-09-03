@@ -4,6 +4,7 @@ session_start();
 $pdo = getPDO();
 $posts = getAllPosts($pdo);
 $notFound = isset($_GET['not-found']);
+$profile = getAuthProfile($pdo);
 ?>
 
 <!DOCTYPE html>
@@ -15,6 +16,7 @@ $notFound = isset($_GET['not-found']);
     <body>
         <?php require 'templates/top-menu.php' ?>
         <?php require 'templates/sidebar-left.php' ?>
+        <?php require 'templates/bg-logo.php' ?>
         
         <div class="main-container">
             <div class="content-container">

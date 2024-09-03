@@ -40,6 +40,7 @@ if ($_POST)
 // Connect to the database, run a query
 $pdo = getPDO();
 $posts = getAllPosts($pdo);
+$profile = getAuthProfile($pdo);
 
 ?>
 <!DOCTYPE html>
@@ -51,6 +52,7 @@ $posts = getAllPosts($pdo);
     <body>
         <?php require 'templates/top-menu.php' ?>
         <?php require 'templates/sidebar-left.php' ?>
+        <?php require 'templates/bg-logo.php' ?>
         <div class="main-container">
             <div class="content-container">
                 <h1>Post list</h1>
