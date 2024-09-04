@@ -109,17 +109,28 @@ $profile = getAuthProfile($pdo);
                 <div class="content-container">
                     <div class="principal-column">
                         <div class="post">
-                            <h2>
-                                <?php echo htmlEscape($row['title']) ?>
-                            </h2>
-                            <h3>
-                                <a href="profile.php?profile_id=<?php echo $row['user_id']?>">
-                                <?php echo htmlEscape($row['author']) ?>
+                            <h1 class="post-creation-info">
+                                <?php $authAvatar = getProfileAvatar($pdo, $row['user_id']); ?>
+                                <?php $authVisibleName = getUserVisiblleName($pdo, $row['user_id']); ?>
+                                
+                                <a href="profile.php?profile_id=<?php echo $row['user_id']?>" class="post-author-avatar">
+                                    <?php echo renderProfileImage($authAvatar, 'small'); ?>
                                 </a>
+                                
+                                <div class="post-author-details">
+                                    <div class="date">
+                                        <?php echo convertSqlDate($row['created_at']) ?>
+                                    </div>
+                                    <a href="profile.php?profile_id=<?php echo $row['user_id']?>" class="post-author-name">
+                                        <?php echo htmlEscape($authVisibleName) ?>
+                                    </a>
+                                </div>
+                            </h1>
+
+                            <h3>
+                                <?php echo htmlEscape($row['title']) ?>
                             </h3>
-                            <div class="date">
-                                <?php echo convertSqlDate($row['created_at']) ?>
-                            </div>
+                            
                             <?php if ($row['thumbnail']): ?>
 
                                 <div class="post-thumbnail-container">
@@ -131,15 +142,15 @@ $profile = getAuthProfile($pdo);
                                 <?php echo convertNewlinesToParagraphs($row['body']) ?>
                             </div>
                         </div>
-
-                        <?php require 'templates/list-comments.php' ?>
-
                         <?php require 'templates/comment-form.php' ?>
+                        <?php require 'templates/list-comments.php' ?>
 
                     </div>
                     
 
             </div>
         </div>
+
+        <script src="assets/js/comment-form.js"></script>
     </body>
 </html>

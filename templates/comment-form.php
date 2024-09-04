@@ -8,15 +8,20 @@
     </div>
 <?php endif ?>
 
-<h3 class="form-title">Add your comment</h3>
+<h3 class="form-title comment-toggle" id="comment-toggle">
+    Add Comment
+</h3>
 
 <form
     action="view-post.php?action=add-comment&amp;post_id=<?php echo $postId?>"
     method="post"
     class="comment-form user-form"
     enctype="multipart/form-data"
+    id="comment-form"
+    style="display: none;"
 >
-    <div class="form-group">
+
+    <div class="form-group" style="display: none;">
         <label for="comment-name" class="form-label">
             Name:
         </label>
@@ -40,23 +45,23 @@
             class="form-textarea"
             rows="8"
             cols="70"
-        ><?php echo htmlEscape($commentData['body']) ?></textarea>
+        ></textarea>
     </div>
     
-    <div class="form-group">
-        <label for="comment-image" class="form-label">
-            Image:
+    <div class="form-group button-group">
+        <button type="button" class="form-cancel-button">Cancel</button>
+        <label for="comment-image" class="form-image-button">
+            Upload Image
+            <input
+                type="file"
+                id="comment-image"
+                name="comment-image"
+                class="form-input-file"
+                accept="image/jpeg, image/png, image/gif"
+            />
         </label>
-        <input
-            type="file"
-            id="comment-image"
-            name="comment-image"
-            class="form-input"
-            accept="image/jpeg, image/png, image/gif"
-        />
-
-    <div class="form-group">
-        <input type="submit" value="Submit comment" class="form-submit-button" name="add-comment" />
+        <input type="submit" value="Send" class="form-submit-button" name="add-comment" />
     </div>
 </form>
+
 

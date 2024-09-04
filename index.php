@@ -29,10 +29,10 @@ $profile = getAuthProfile($pdo);
                         <div class="post-synopsis">
                             <div class="post-main-container">
                                 <div class="post-creation-info">
-                                    <a href="" class="post-author-avatar">
+                                    <a href="profile.php?profile_id=<?php echo $post['user_id'] ?>" class="post-author-avatar">
                                         <?php echo renderProfileImage($authAvatar, 'small'); ?>
                                     </a>
-                                    <a href="" class="post-author-name">
+                                    <a href="profile.php?profile_id=<?php echo $post['user_id'] ?>" class="post-author-name">
                                         <?php echo htmlEscape($authVisibleName) ?>
                                     </a>
                                     <div class="meta">
