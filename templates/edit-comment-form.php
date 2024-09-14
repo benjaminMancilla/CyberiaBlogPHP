@@ -1,6 +1,4 @@
 <div class="comment-controls">
-    <button onclick="toggleEditForm(<?php echo $comment['id'] ?>)">Edit</button>
-
     <div id="edit-form-<?php echo $comment['id'] ?>" class="edit-form" style="display:none;">
         <form method="post" action="view-post.php?action=edit-comment&amp;post_id=<?php echo $postId ?>" enctype="multipart/form-data">
             <textarea name="edit-comment-text[<?php echo $comment['id'] ?>]"><?php echo htmlEscape($comment['body']) ?></textarea>

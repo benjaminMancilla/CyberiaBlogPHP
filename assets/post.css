@@ -130,36 +130,31 @@
     font-weight: bold;
 }
 
-.comment-toggle {
-    cursor: pointer;
-    padding: 10px;
-    background-color: #222;
-    color: #f2f2f2;
-    border-radius: 5px;
-    text-align: center;
-    margin-bottom: 10px;
-    transition: background-color 0.3s ease;
-}
-
-.comment-toggle:hover {
-    background-color: #444;
-}
-
-.comment-form {
-    margin-top: 10px;
-    padding: 10px;
-    background-color: #121212;
-    border-radius: 5px;
-}
 
 .button-group {
-    display: flex;
+    display: flex !important;
+    justify-content: space-between;
+    align-items: center !important;
     gap: 10px;
-    margin-top: 10px;
+    flex-direction: row !important;
 }
 
-.form-cancel-button,
-.form-submit-button,
+.form-cancel-button {
+    background-color: #470947;
+    color: #f2f2f2;
+    border: none;
+    padding: 10px 6px 10px 6px;
+    cursor: pointer;
+    border-radius: 20px;
+    width: 80px;
+    margin-left: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 16px;
+  }
+
+
 .form-image-button {
     background-color: #470947;
     color: #f2f2f2;
@@ -168,14 +163,37 @@
     cursor: pointer;
     border-radius: 5px;
     text-align: center;
+    flex-shrink: 0;
+    width: 100px;
+    display: flex;
+}
+
+.form-submit-button {
+    background-color: #1ea692 !important;
+    color: #f2f2f2 !important;
+    border: none !important;
+    padding: 10px 6px 10px 6px !important;
+    cursor: pointer !important;
+    border-radius: 20px !important;
+    text-align: center  !important;
+    flex-shrink: 0 !important;
+    width: 80px !important;
+    display: flex !important;
+    gap: 6px;
+    margin-left: 0;
+    justify-content: center !important;
 }
 
 .form-cancel-button:hover,
-.form-submit-button:hover,
 .form-image-button:hover {
-    background-color: #333;
+    background-color: #350735 !important;
+}
+
+.form-submit-button:hover:hover {
+    background-color: #19c3a9 !important;
 }
 
 .form-image-button input[type="file"] {
     display: none;
 }
+

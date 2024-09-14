@@ -1,15 +1,31 @@
 .comment-form {
-    max-width: 600px;
-    padding: 1em;
-    background-color: #f9f9f9;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    width: 100%;
+    padding: 12px 20px 14px 20px;
+    border-radius: 16px;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);
+    z-index: 2;
+    margin-top: 10px;
+    background-color: #262626;
+
 }
 
-.comment-list h3 {
-    font-size: 1.2em;
+.comment-toggle {
+    cursor: pointer;
+    padding: 12px 20px 14px 20px;
+    background-color: #262626;
+    color: #f2f2f2;
+    border-radius: 16px;
+    text-align: center;
     margin-bottom: 10px;
-    max-width: 900px;
+    transition: background-color 0.3s ease;
+    width: 100%;
+}
+
+.comment-toggle:hover {
+    background-color: #444;
 }
 
 .comment .comment-meta {
@@ -17,6 +33,8 @@
     color: grey;
     border-top: 1px dotted silver;
     padding-top: 8px;
+    display: flex;
+    flex-direction: column;
 }
 
 .comment .comment-meta input {
@@ -26,7 +44,97 @@
 .comment-body p {
     margin: 8px 4px;
 }
-.comment-list {
-    border-bottom: 1px dotted silver;
-    margin-bottom: 12px;
+
+
+/* Contenedor principal que agrupa todas las pills */
+.pill-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 105.5%;
+    margin: 0 auto;
+    padding: 20px 0px 20px 0px;
+    background-color: #262626;
+    border-radius: 20px;
+}
+
+.pill {
+    background-color: #262626;
+    border-radius: 20px;
+    padding: 12px;
+}
+
+.subpill {
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    grid-gap: 10px;
+    align-items: start;
+}
+
+/* Sección de auth-info */
+.auth-info {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.user-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.comment-meta {
+    display: flex;
+    flex-direction: column;
+}
+
+.comment-user {
+    font-weight: bold;
+}
+
+.comment-date {
+    font-size: 0.9em;
+    color: #666;
+}
+
+.pill-text {
+    margin-left: 20px;
+}
+
+.comment-body {
+    margin-top: 10px;
+    font-size: 1em;
+    line-height: 1.5;
+}
+
+.comment-image {
+    margin-top: 10px;
+}
+
+.comment-image img {
+    max-width: 100%;
+    border-radius: 5px;
+}
+
+.pill-options {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    align-items: flex-start;
+    margin-left: 20px;
+}
+
+.pill-option-btn {
+    background-color: #ff595e;
+    color: #fff;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.pill-option-btn:hover {
+    background-color: #ff4040;
 }

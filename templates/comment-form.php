@@ -49,7 +49,7 @@
     </div>
     
     <div class="form-group button-group">
-        <button type="button" class="form-cancel-button">Cancel</button>
+        
         <label for="comment-image" class="form-image-button">
             Upload Image
             <input
@@ -60,7 +60,8 @@
                 accept="image/jpeg, image/png, image/gif"
             />
         </label>
-        <input type="submit" value="Send" class="form-submit-button" name="add-comment" />
+        <button type="button" class="form-cancel-button">Cancel</button>
+        <button type="submit" class="form-submit-button" name="add-comment">Send</button>
     </div>
 </form>
 
